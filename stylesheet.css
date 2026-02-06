@@ -39,6 +39,7 @@ a {
 }
 .svgbanner object{
 	width: 100vw;
+	margin: auto;
 	display: block;
 }
 .menu2 {
