@@ -39,7 +39,7 @@ a {
 }
 .svgbanner object{
 	width: 100vw;
-	margin: 20px;
+	justify-content: center;
 	display: block;
 }
 .menu2 {
