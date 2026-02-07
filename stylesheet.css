@@ -47,6 +47,11 @@ a {
 	background-color: rgba(255, 255, 255, 0);
 	width: 45%;
 }
+.sidenav a {
+	position: absolute;
+  left: -150;
+  transition: 0.3s;
+}
 ul {
 	list-style-type: none;
 	display: flex;
