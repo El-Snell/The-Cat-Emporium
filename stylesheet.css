@@ -49,8 +49,8 @@ a {
 }
 .sidenav a {
 		position: absolute;
-  left: -150;
-  transition: 0.3s;
+		left: -150;
+		transition: 0.3s;
 		padding: 15px;
 		width: 150px;
 		text-decoration: none;
