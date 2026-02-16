@@ -62,27 +62,27 @@ a {
 }
 .lucky {
 		top: 20px;
-		background-color: 6E9EAF;
+		background-color: #6E9EAF;
 }
 .bean {
 		top: 80px;
-		background-color: 6639B7;
+		background-color: #6639B7;
 }
 .soji {
 		top: 140px;
-		background-color: FF6E00;
+		background-color: #FF6E00;
 }
 .bert {
 		top: 200px;
-		background-color: 0094B3;
+		background-color: #0094B3;
 }
 .pig {
 		top: 260px;
-		background-color: 0094B3;
+		background-color: #0094B3;
 }
 .sonic {
 		top: 320px;
-		background-color: 6E9EAF;
+		background-color: #6E9EAF;
 }
 ul {
 	list-style-type: none;
