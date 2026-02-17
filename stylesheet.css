@@ -60,6 +60,16 @@ a {
 .sidenav a:hover {
 		left: 0;
 }
+input[type="checkbox"] {
+  inline-size: var(--space-sm);   /* increase width */
+  block-size: var(--space-sm);    /* increase height */
+  outline-offset: 5px;            /* focus style enhancement */
+  accent-color: var(--brand);     /* tint the input */
+  position: relative;             /* prepare for an absolute pseudo element */
+  transform-style: preserve-3d;   /* create a 3d z-space stacking context */
+  margin: 0;
+  cursor: pointer;
+}
 .lucky {
 		top: 20px;
 		background-color: #D2492A; /*#6E9EAF*/
