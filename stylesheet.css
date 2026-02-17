@@ -8,6 +8,7 @@ body {
 .middle {
 	width: 45%;
 	margin: auto;
+  padding: 30px;
 	background-color: white;
 }
 .inline-h6 {
@@ -95,27 +96,27 @@ input[type="checkbox"]:hover::before {
   --thumb-scale: 1;
 }
 .lucky {
-		top: 246px;
+		top: 256px;
 		background-color: #D2492A; /*#6E9EAF*/
 }
 .bean {
-		top: 306px;
+		top: 316px;
 		background-color: #4F2D7F; /*#6639B7*/
 }
 .soji {
-		top: 366px;
+		top: 376px;
 		background-color: #A70240; /*#FF6E00*/
 }
 .bert {
-		top: 426px;
+		top: 436px;
 		background-color: #006D55; /*#0094B3*/
 }
 .pig {
-		top: 486px;
+		top: 496px;
 		background-color: #005293; /*#0094B3*/
 }
 .sonic {
-		top: 546px;
+		top: 556px;
 		background-color: #920075; /*#6E9EAF8*/
 }
 .external-link a {
