@@ -33,6 +33,14 @@
 			<p>Bert is an ummm… actually, I have no clue what he is. We're pretty sure he was born somewhere in the spring of 2014. He likes to sleep, vomit, eat and be a lap cat. He’s needy, affectionate, tolerant and playful. Did you know the average cat sleeps for 12 to 16 hours a day? I think Bert took that as a challenge. Some of his nicknames are Bizzles, Berty Bizz, Bertles and Berty Boy. His favorite place to sleep is on the white chair in the living room.</p>
 		</section>
 	</div>
+  <script>
+    const form = document.querySelector('form');
+
+    form.addEventListener('input', event => {
+      const formData = Object.fromEntries(new FormData(form));
+      console.table(formData);
+    })
+  </script>
 </body>
 
 
