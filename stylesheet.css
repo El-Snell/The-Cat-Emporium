@@ -4,12 +4,13 @@ body {
 	background-size: cover;
 	background-color: #FFB634;
 	font-size: 20px;
+	font-family: Arial
 }
 .middle {
 	width: 45%;
 	margin: auto;
-  padding: 30px;
-	background-color: white;
+  padding: 20px;
+	background-color: rgba(255, 255, 255, 0);
 }
 .inline-h6 {
 	display: inline;
