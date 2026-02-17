@@ -10,7 +10,7 @@ body {
 	width: 45%;
 	margin: auto;
   padding: 20px;
-	background-color: rgba(255, 255, 255, 0);
+	background-color: none;
 }
 .inline-h6 {
 	display: inline;
@@ -50,17 +50,17 @@ a {
 	width: 45%;
 }
 .sidenav a {
-		position: absolute;
-		left: -150px;
-		transition: 0.3s;
-		padding: 15px;
-		width: 150px;
-		text-decoration: none;
-		font-size: 20px;
-		color: white;
+	position: absolute;
+	left: -150px;
+	transition: 0.3s;
+	padding: 15px;
+	width: 150px;
+	text-decoration: none;
+	font-size: 20px;
+	color: white;
 }
 .sidenav a:hover {
-		left: 0;
+	left: 0;
 }
 @custom-media --motionOK (prefers-reduced-motion: no-preference);
 
@@ -97,42 +97,42 @@ input[type="checkbox"]:hover::before {
   --thumb-scale: 1;
 }
 .lucky {
-		top: 276px;
-		background-color: #D2492A; /*#6E9EAF*/
+	top: 276px;
+	background-color: #D2492A; /*#6E9EAF*/
 }
 .bean {
-		top: 336px;
-		background-color: #4F2D7F; /*#6639B7*/
+	top: 336px;
+	background-color: #4F2D7F; /*#6639B7*/
 }
 .soji {
-		top: 396px;
-		background-color: #A70240; /*#FF6E00*/
+	top: 396px;
+	background-color: #A70240; /*#FF6E00*/
 }
 .bert {
-		top: 456px;
-		background-color: #006D55; /*#0094B3*/
+	top: 456px;
+	background-color: #006D55; /*#0094B3*/
 }
 .pig {
-		top: 516px;
-		background-color: #005293; /*#0094B3*/
+	top: 516px;
+	background-color: #005293; /*#0094B3*/
 }
 .sonic {
-		top: 576px;
-		background-color: #920075; /*#6E9EAF8*/
+	top: 576px;
+	background-color: #920075; /*#6E9EAF8*/
 }
 .external-link a {
- text-decoration: wavy underline blue;
+  text-decoration: wavy underline blue;
 }
 ul {
- list-style-type: none;
- display: flex;
+  list-style-type: none;
+  display: flex;
 	justify-content: center;
- padding: 0px;
+  padding: 0px;
 	padding-top: 7px;
- margin: 0px;
+  margin: 0px;
 } 
 li {
-	width: 20%;
-	padding-left: 10px;
- padding-right: 10px;
+  width: 20%;
+  padding-left: 10px;
+  padding-right: 10px;
 } 
