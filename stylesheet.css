@@ -93,7 +93,8 @@ input[type="checkbox"]::before {
 /* on hover, set scale custom property to "in" state */
 input[type="checkbox"]:hover::before {
   --thumb-scale: 1;
-}.lucky {
+}
+.lucky {
 		top: 246px;
 		background-color: #D2492A; /*#6E9EAF*/
 }
