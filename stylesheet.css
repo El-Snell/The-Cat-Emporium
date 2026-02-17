@@ -96,27 +96,27 @@ input[type="checkbox"]:hover::before {
   --thumb-scale: 1;
 }
 .lucky {
-		top: 256px;
+		top: 276px;
 		background-color: #D2492A; /*#6E9EAF*/
 }
 .bean {
-		top: 316px;
+		top: 336px;
 		background-color: #4F2D7F; /*#6639B7*/
 }
 .soji {
-		top: 376px;
+		top: 396px;
 		background-color: #A70240; /*#FF6E00*/
 }
 .bert {
-		top: 436px;
+		top: 456px;
 		background-color: #006D55; /*#0094B3*/
 }
 .pig {
-		top: 496px;
+		top: 516px;
 		background-color: #005293; /*#0094B3*/
 }
 .sonic {
-		top: 556px;
+		top: 576px;
 		background-color: #920075; /*#6E9EAF8*/
 }
 .external-link a {
