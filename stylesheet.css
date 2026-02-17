@@ -4,8 +4,93 @@ body {
 	background-size: cover;
 	background-color: #FFB634;
 	font-size: 20px;
-	font-family: Arial
+	font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.settings-btn {
+  background: #1f2937;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.menu {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  width: 260px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  padding: 10px 0;
+
+  opacity: 0;
+  transform: translateY(-20px); /* slide from top */
+  pointer-events: none;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.menu.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.menu-item:hover {
+  background: #f3f4f6;
+}
+.menu-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.switch {
+  position: relative;
+  width: 40px;
+  height: 22px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #d1d5db;
+  border-radius: 20px;
+  transition: 0.3s;
+}
+.slider:before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+input:checked + .slider {
+  background-color: #2563eb;
+}
+
 .middle {
 	width: 45%;
 	margin: auto;
