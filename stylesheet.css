@@ -90,7 +90,9 @@ body {
 input:checked + .slider {
   background-color: #2563eb;
 }
-
+input:checked + .slider:before {
+  transform:translateX(18px);
+}
 .middle {
 	width: 45%;
 	margin: auto;
