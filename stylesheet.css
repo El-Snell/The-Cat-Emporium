@@ -24,7 +24,7 @@ body {
 }
 .menu {
   position: absolute;
-  right: 100%;
+  right: 0%;
   top: 110%;
   width: 260px;
   background: white;
