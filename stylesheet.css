@@ -93,6 +93,16 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform:translateX(18px);
 }
+.divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 6px 0;
+}
+.menu-left svg {
+  width: 20px;
+  height: 20px;
+  fill: #2563eb;
+}
 .middle {
 	width: 45%;
 	margin: auto;
