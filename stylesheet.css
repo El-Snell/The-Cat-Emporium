@@ -4,7 +4,7 @@ body {
 	background-size: cover;
 	background-color: #FFB634;
 	font-size: 20px;
-	font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 .dropdown {
   position: relative;
@@ -24,7 +24,7 @@ body {
 }
 .menu {
   position: absolute;
-  right: 0;
+  right: 100%;
   top: 110%;
   width: 260px;
   background: white;
@@ -107,7 +107,7 @@ input:checked + .slider:before {
 	width: 45%;
 	margin: auto;
   padding: 20px;
-	background-color: none;
+	background-color: #000;
 }
 .inline-h6 {
 	display: inline;
