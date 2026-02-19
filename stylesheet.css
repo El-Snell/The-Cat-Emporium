@@ -109,7 +109,7 @@ input:checked + .slider:before {
 	width: 45%;
 	margin: auto;
   padding: 20px;
-	background-color: #000;
+	background: #000;
   color: #FFF;
 }
 .inline-h6 {
