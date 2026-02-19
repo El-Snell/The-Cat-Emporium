@@ -26,7 +26,7 @@ body {
 }
 .menu {
   position: absolute;
-  right: 0;
+  right: 0px;
   top: 110%;
   width: 260px;
   background: white;
@@ -110,6 +110,7 @@ input:checked + .slider:before {
 	margin: auto;
   padding: 20px;
 	background-color: #000;
+  color: #FFF;
 }
 .inline-h6 {
 	display: inline;
