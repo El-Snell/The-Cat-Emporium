@@ -8,8 +8,8 @@ body {
 }
 .dropdown {
   position: fixed;
-  right: 0px;
-  top: 0px;
+  right: 0;
+  top: 0;
   display: inline-block;
 }
 .settings-btn {
@@ -26,7 +26,7 @@ body {
 }
 .menu {
   position: absolute;
-  right: 0px;
+  right: 0;
   top: 110%;
   width: 260px;
   background: white;
