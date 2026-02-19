@@ -91,26 +91,26 @@
   // Detect system dark mode
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     darkToggle.checked = true;
-		document.body.style.middle = "#000"
-    document.body.style.color = "white";
+		document.middle.style.background = "#000"
+    document.middle.style.color = "white";
   }
 
   // Load saved dark mode preference
   if (localStorage.getItem("darkMode") === "true") {
     darkToggle.checked = true;
-		document.body.style.middle = "#000"
-    document.body.style.color = "white";
+		document.middle.style.background = "#000"
+    document.middle.style.color = "white";
   } else if (localStorage.getItem("darkMode") === "false") {
     darkToggle.checked = false;
-		document.body.style.middle = "#FFF"
-    document.body.style.color = "black";
+		document.middle.style.background = "#FFF"
+    document.middle.style.color = "black";
   }
 
   // Toggle dark mode
   darkToggle.addEventListener("change", function() {
     const isDark = darkToggle.checked;
-    document.body.style.middle = isDark ? "#FFF" : "#000";
-    document.body.style.color = isDark ? "white" : "black";
+    document.middle.style.background = isDark ? "#FFF" : "#000";
+    document.middle.style.color = isDark ? "white" : "black";
     localStorage.setItem("darkMode", isDark);
   });
 
