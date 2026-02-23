@@ -1,12 +1,46 @@
-{
-  "always_run_in_app" : false,
-  "icon" : {
-    "color" : "green",
-    "glyph" : "magic"
-  },
-  "name" : "settings",
-  "script" : "const btn = document.getElementById(\"settingsBtn\");\nconst menu = document.getElementById(\"settingsMenu\");\nconst darkToggle = document.getElementById(\"darkToggle\");\n  \/\/const notifToggle = document.getElementById(\"notifToggle\");\nconst extToggle = document.getElementById(\"extToggle\");\n\n  \/\/ Detect system dark mode\nif (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {\n  darkToggle.checked = true;\n  document.middle.style.background = \"#000\"\n  document.middle.style.color = \"white\";\n}\n\n  \/\/ Load saved dark mode preference\nif (localStorage.getItem(\"darkMode\") === \"true\") {\n  darkToggle.checked = true;\n  document.middle.style.background = \"#000\"\n  document.middle.style.color = \"white\";\n} else if (localStorage.getItem(\"darkMode\") === \"false\") {\n  darkToggle.checked = false;\n  document.middle.style.background = \"#FFF\"\n  document.middle.style.color = \"black\";\n}\n\n  \/\/ Toggle dark mode\ndarkToggle.addEventListener(\"change\", function() {\n  const isDark = darkToggle.checked;\n  document.middle.style.background = isDark ? \"#FFF\" : \"#000\";\n  document.middle.style.color = isDark ? \"white\" : \"black\";\n  localStorage.setItem(\"darkMode\", isDark);\n});\n\n  \/\/ Toggle notifications (optional localStorage)\n  \/\/notifToggle.addEventListener(\"change\", function() {\n  \/\/  localStorage.setItem(\"notifications\", notifToggle.checked);\n  \/\/});\n\n  \/\/ Show\/hide menu\nbtn.addEventListener(\"click\", function(e) {\n  e.stopPropagation();\n  menu.classList.toggle(\"show\");\n});\n\n\/\/ Close when clicking outside\ndocument.addEventListener(\"click\", function() {\n  menu.classList.remove(\"show\");\n});",
-  "share_sheet_inputs" : [
+const btn = document.getElementById("settingsBtn");
+const menu = document.getElementById("settingsMenu");
+const darkToggle = document.getElementById("darkToggle");
+  //const notifToggle = document.getElementById("notifToggle");
+const extToggle = document.getElementById("extToggle");
 
-  ]
+  // Detect system dark mode
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  darkToggle.checked = true;
+  document.middle.style.background = "#000";
+  document.middle.style.color = "white";
 }
+
+  // Load saved dark mode preference
+if (localStorage.getItem("darkMode") === "true") {
+  darkToggle.checked = true;
+  document.middle.style.background = "#000";
+  document.middle.style.color = "white";
+} else if (localStorage.getItem("darkMode") === "false") {
+  darkToggle.checked = false;
+  document.middle.style.background = "#FFF";
+  document.middle.style.color = "black";
+}
+
+  // Toggle dark mode
+darkToggle.addEventListener("change", function() {
+  const isDark = darkToggle.checked;
+  document.middle.style.background = isDark ? "#FFF" : "#000";
+  document.middle.style.color = isDark ? "white" : "black";
+  localStorage.setItem("darkMode", isDark);
+});
+
+  // Toggle notifications (optional localStorage)
+  //notifToggle.addEventListener("change", function() {
+  //  localStorage.setItem("notifications", notifToggle.checked);
+  //});
+
+  // Show/hide menu
+btn.addEventListener("click", function(e) {
+  e.stopPropagation();
+  menu.classList.toggle("show");
+});
+// Close when clicking outside
+document.addEventListener("click", function() {
+  menu.classList.remove("show");
+});
