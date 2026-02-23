@@ -1,3 +1,5 @@
 {
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "telemetry.editStats.enabled": false,
+    "telemetry.feedback.enabled": false
 }
