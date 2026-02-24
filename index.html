@@ -7,7 +7,7 @@
 	<title>The Cat Emporium</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="stylesheet.css" rel="stylesheet">
-  <script src="settings.js" defer></script>
+  <!--<script src="settings.js" defer></script>-->
 </head>
 
 
@@ -82,7 +82,7 @@
 			</ul>
 		</section>
 	</div>
-	<!--<script>
+	<script>
   const btn = document.getElementById("settingsBtn");
   const menu = document.getElementById("settingsMenu");
   const darkToggle = document.getElementById("darkToggle");
@@ -115,6 +115,25 @@
     localStorage.setItem("darkMode", isDark);
   });
 
+  // Load saved extended paragraphs preference
+  if (localStorage.getItem("extPara") === "true") {
+    extToggle.checked = true;
+    document.normal.style.display = none;
+    document.extended.style.display = inline;
+  } else if (localStorage.getItem("extPara") === "false") {
+    extToggle.checked = false;
+    document.normal.style.display = inline;
+    document.extended.style.display = none;
+  }
+
+  // Toggle extended paragraphs
+  extToggle.addEventListener("change", function() {
+    const isExt = extToggle.checked;
+    document.normal.style.display = isExt ? inline : none;
+    document.extended.style.display = isExt ? none : inline;
+    localStorage.setItem("extPara", isExt);
+  });
+
   // Toggle notifications (optional localStorage)
   //notifToggle.addEventListener("change", function() {
   //  localStorage.setItem("notifications", notifToggle.checked);
@@ -130,7 +149,7 @@
   document.addEventListener("click", function() {
     menu.classList.remove("show");
   });
-  </script>-->
+  </script>
 </body>
 
 
