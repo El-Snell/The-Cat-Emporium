@@ -237,6 +237,39 @@ input[type="checkbox"]:hover::before {
 .external-link a {
   text-decoration: wavy underline blue;
 }
+#sky {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+img.glitter-star {
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  animation: glitter 2s linear 0s infinite normal;
+}
+@keyframes glitter {
+  0% {
+    -webkit-transform: scale(3.0);
+    opacity: 1;
+  }
+  25% {
+    -webkit-transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    -webkit-transform: scale(2.0);
+    opacity: 1;
+  }
+  75% {
+    -webkit-transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: scale(3.0);
+    opacity: 1;
+  }
+}
 ul {
   list-style-type: none;
   display: flex;
