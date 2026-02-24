@@ -163,6 +163,14 @@ a {
 .sidenav a:hover {
 	left: 0;
 }
+.normal {
+  color: rgba(0, 0, 0, 1);
+  background-color: rgba(255, 255, 255, 1);
+}
+.extended {
+  color: rgba(0, 0, 0, 0);
+  background-color: rgba(255, 255, 255, 0);
+}
 @custom-media --motionOK (prefers-reduced-motion: no-preference);
 
 input[type="checkbox"]::before {
