@@ -164,12 +164,10 @@ a {
 	left: 0;
 }
 .normal {
-  color: rgba(0, 0, 0, 1);
-  background-color: rgba(255, 255, 255, 1);
+  display: inline;
 }
 .extended {
-  color: rgba(0, 0, 0, 0);
-  background-color: rgba(255, 255, 255, 0);
+  display: none;
 }
 @custom-media --motionOK (prefers-reduced-motion: no-preference);
 

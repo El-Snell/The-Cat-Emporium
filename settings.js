@@ -30,6 +30,25 @@ darkToggle.addEventListener("change", function() {
   localStorage.setItem("darkMode", isDark);
 });
 
+// Load saved extended paragraphs preference
+if (localStorage.getItem("extPara") === "true") {
+  extToggle.checked = true;
+  document.normal.style.display = none;
+  document.extended.style.display = inline;
+} else if (localStorage.getItem("extPara") === "false") {
+  extToggle.checked = false;
+  document.normal.style.display = inline;
+  document.extended.style.display = none;
+}
+
+// Toggle extended paragraphs
+extToggle.addEventListener("change", function() {
+  const isExt = extToggle.checked;
+  document.normal.style.display = isExt ? inline : none;
+  document.extended.style.display = isExt ? none : inline;
+  localStorage.setItem("extPara", isExt);
+});
+
   // Toggle notifications (optional localStorage)
   //notifToggle.addEventListener("change", function() {
   //  localStorage.setItem("notifications", notifToggle.checked);
