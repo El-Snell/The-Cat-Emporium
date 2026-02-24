@@ -181,40 +181,40 @@ a {
 .extended {
   display: none;
 }
-@custom-media --motionOK (prefers-reduced-motion: no-preference);
+/*@custom-media --motionOK (prefers-reduced-motion: no-preference);
 
 input[type="checkbox"]::before {
   --thumb-scale: .01;                        /* initial scale of highlight */
-  --thumb-highlight-size: var(--space-xl);
+  /*--thumb-highlight-size: var(--space-xl);
 
   content: "";
   inline-size: var(--thumb-highlight-size);
   block-size: var(--thumb-highlight-size);
   clip-path: circle(50%);                     /* circle shape */
-  position: absolute;                         /* this is why position relative on parent */
-  top: 50%;                                   /* pop and plop technique (https://web.dev/centering-in-css#5-pop-and-plop) */
-  left: 50%;
+  /*position: absolute;                         /* this is why position relative on parent */
+  /*top: 50%;                                   /* pop and plop technique (https://web.dev/centering-in-css#5-pop-and-plop) */
+  /*left: 50%;
   background: var(--thumb-highlight-color);
   transform-origin: center center;            /* goal is a centered scaling circle */
-  transform:                                  /* order here matters!! */
-    translateX(-50%)                          /* counter balances left: 50% */
-    translateY(-50%)                          /* counter balances top: 50% */
-    translateZ(-1px)                          /* PUTS IT BEHIND THE CHECKBOX */
-    scale(var(--thumb-scale))                 /* value we toggle for animation */
-  ;
+  /*transform:                                  /* order here matters!! */
+  /*  translateX(-50%)                          /* counter balances left: 50% */
+  /*  translateY(-50%)                          /* counter balances top: 50% */
+  /*  translateZ(-1px)                          /* PUTS IT BEHIND THE CHECKBOX */
+  /*  scale(var(--thumb-scale))                 /* value we toggle for animation */
+  /*;
   will-change: transform;
 
   @media (--motionOK) {                       /* transition only if motion is OK */
-    & {
+/*    & {
       transition: transform .2s ease;
     }
   }
 }
 
 /* on hover, set scale custom property to "in" state */
-input[type="checkbox"]:hover::before {
+/*input[type="checkbox"]:hover::before {
   --thumb-scale: 1;
-}
+}*/
 .lucky {
 	top: 276px;
 	background-color: #D2492A; /*#6E9EAF*/
