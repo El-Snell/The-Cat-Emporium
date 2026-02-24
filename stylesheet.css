@@ -5,6 +5,7 @@ body {
 	background-color: #FFB634;
 	font-size: 20px;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: background 0.3s, color 0.3s
 }
 .dropdown {
   position: fixed;
