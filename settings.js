@@ -7,6 +7,11 @@ const middle = document.querySelector(".middle")
 const normal = document.querySelector(".normal")
 const extended = document.querySelector(".extended")
 
+// Reload page
+function reload_page() {
+  location.reload;
+}
+
 // Detect system dark mode
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
   darkToggle.checked = true;
@@ -39,6 +44,7 @@ darkToggle.addEventListener("change", function() {
     middle.style.color = isDark ? "black" : "white";
   }
   localStorage.setItem("darkMode", isDark);
+  reload_page();
 });
 
 // Load saved extended paragraphs preference
@@ -58,6 +64,7 @@ extToggle.addEventListener("change", function() {
   normal.style.display = isExt ? "inline" : "none";
   extended.style.display = isExt ? "none" : "inline";
   localStorage.setItem("extPara", isExt);
+  reload_page();
 });
 
   // Toggle notifications (optional localStorage)
