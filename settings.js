@@ -44,7 +44,7 @@ darkToggle.addEventListener("change", function() {
     middle.style.color = isDark ? "black" : "white";
   }
   localStorage.setItem("darkMode", isDark);
-  reload_page();
+  reload_page()
 });
 
 // Load saved extended paragraphs preference
@@ -64,7 +64,7 @@ extToggle.addEventListener("change", function() {
   normal.style.display = isExt ? "inline" : "none";
   extended.style.display = isExt ? "none" : "inline";
   localStorage.setItem("extPara", isExt);
-  reload_page();
+  reload_page()
 });
 
   // Toggle notifications (optional localStorage)
