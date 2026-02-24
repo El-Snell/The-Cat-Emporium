@@ -35,7 +35,7 @@ body {
   box-shadow: 0 15px 40px rgba(0,0,0,0.15);
   padding: 10px 0;
 
-  opacity: 1;
+  opacity: 0;
   transform: translateY(-20px); /* slide from top */
   pointer-events: none;
   transition: transform 0.25s ease, opacity 0.25s ease;
