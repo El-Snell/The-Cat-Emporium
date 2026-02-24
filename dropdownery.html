@@ -14,7 +14,7 @@ body {
 
 /* Dropdown container */
 .dropdown {
-  position: relative;
+  position: fixed;
   display: inline-block;
 }
 
@@ -151,7 +151,7 @@ input:checked + .slider:before {
 </style>
 </head>
 <body>
-
+<div id="sky">
 <div class="dropdown">
   <button class="settings-btn" id="settingsBtn">
     <!-- Gear icon -->
@@ -217,10 +217,9 @@ input:checked + .slider:before {
 
   </div>
 </div>
-<div id="sky"></div>
 <h1>You found me! Congratulations!</h1>
 <p>I'm a test page for the settings dropdown. And no, there isn't any more secret pages.</p>
-
+</div>
 <script>
 const btn = document.getElementById("settingsBtn");
 const menu = document.getElementById("settingsMenu");
