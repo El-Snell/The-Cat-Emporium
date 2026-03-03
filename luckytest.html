@@ -108,10 +108,14 @@
     ...
   </div>-->
 	</div>
-  <div id="catGPT" class="hidden">
-    <div class="cat-header">🐱 The Cat EmporiumGPT</div>
-    <div id="catMessages" class="cat-messages"></div>
-    <input id="catInput" placeholder="Ask me something..." />
+  <div id="catGPT" class="hidden-cat-gpt">
+    <div class="cat-header">
+      <div class="cat-avatar" id="catAvatar">🐱</div>
+      <span>The Cat EmporiumGPT</span>
+    </div>
+    <input type="file" id="chatImport" accept=".tcechat" style="display:none;"></input>
+    <div id="catGPTMessages" class="cat-messages"></div>
+    <input id="catGPTInput" placeholder="Ask about cats..." />
   </div>
 </body>
 

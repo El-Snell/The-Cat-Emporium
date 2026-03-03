@@ -287,38 +287,65 @@ li {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 300px;
-  background: #111;
+  width: 280px;
+  background: #161616;
   color: #fff;
-  border-radius: 12px;
-  font-family: sans-serif;
+  border-radius: 10px;
+  font-family: "Segoe UI", sans-serif;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
-.hidden {
-  display: none;
-}
+.hidden-cat-gpt { display: none; }
 
 .cat-header {
   padding: 10px;
-  background: #ff6b6b;
-  border-radius: 12px 12px 0 0;
+  background: #ff8c00;
   font-weight: bold;
+  text-align: center;
 }
 
 .cat-messages {
   padding: 10px;
-  height: 250px;
+  height: 200px;
   overflow-y: auto;
-  font-size: 14px;
+  font-size: 13px;
 }
 
-#catInput {
+#catGPTInput {
   border: none;
   padding: 10px;
   border-top: 1px solid #333;
   background: #222;
-  color: white;
+  color: #fff;
+}
+.cat-header {
+  padding: 8px;
+  background: #ff8c00;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+}
+
+.cat-avatar {
+  font-size: 24px;
+  animation: float 2.5s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0px); }
+}
+
+.cat-thinking {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
