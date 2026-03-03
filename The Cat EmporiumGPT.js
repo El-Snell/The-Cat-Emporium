@@ -120,6 +120,53 @@ function helperHelp(isDev) {
 
   return isDev ? base + dev : base;
 }
+function buildPageContext() {
+  // Keep it short to avoid huge prompts.
+  const title = document.title || "";
+  const url = location.href;
+
+  const styles = Array.from(document.styleSheets || [])
+    .slice(0, 5)
+    .map(ss => ss.href ? `stylesheet: ${ss.href}` : "stylesheet: inline")
+    .join("\n");
+
+  const scripts = Array.from(document.scripts || [])
+    .slice(0, 8)
+    .map(s => s.src ? `script: ${s.src}` : "script: inline")
+    .join("\n");
+
+  // Lightweight DOM snapshot: main landmarks + ids/classes (no full HTML dump)
+  const landmarks = Array.from(document.querySelectorAll("header, nav, main, section, footer"))
+    .slice(0, 12)
+    .map(el => {
+      const id = el.id ? `#${el.id}` : "";
+      const cls = el.className ? `.${String(el.className).trim().split(/\s+/).slice(0, 3).join(".")}` : "";
+      return `<${el.tagName.toLowerCase()}${id}${cls}>`;
+    })
+    .join("\n");
+
+  const counts = {
+    links: document.querySelectorAll("a").length,
+    images: document.querySelectorAll("img").length,
+    buttons: document.querySelectorAll("button").length,
+    forms: document.querySelectorAll("form").length
+  };
+
+  // A little visible text helps the model answer “where is X” questions
+  const textSample = (document.body?.innerText || "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 1200);
+
+  return {
+    title,
+    url,
+    counts,
+    assets: { styles, scripts },
+    landmarks,
+    textSample
+  };
+}
 
 
 /* ===============================
@@ -184,6 +231,24 @@ function randomMood() {
 
 function randomFact() {
   return catFacts[Math.floor(Math.random() * catFacts.length)];
+}
+async function askCatAI(userText) {
+  const payload = {
+    userText,
+    pageContext: buildPageContext(),
+    // Optional: include your catKnowledge for “project” / “socials” questions
+    catKnowledge: window.catKnowledge || null
+  };
+
+  const res = await fetch("/api/cat-ai", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) throw new Error("AI endpoint error");
+  const data = await res.json();
+  return String(data.reply || "").trim();
 }
 async function fetchRepoInfo() {
   try {
@@ -389,10 +454,12 @@ async function catBrain(text) {
 
   /* --- NEW: smarter fallback (still safe + minimal) --- */
   else {
-    // If they ask a question, give direction instead of dead-end
-    if (t.includes("?") || includesAny(t, ["how", "where", "what", "can you"])) {
-      response = `I can help with site info and quick page checks.\nType "help" to see what I can do. ${randomMood()}`;
-    } else {
+    try {
+      // Let “real AI” handle everything you didn’t explicitly pattern-match.
+      response = await askCatAI(text);
+      if (!response) response = "I couldn't think of a helpful reply. Type \"help\".";
+    } catch {
+      // Preserve your existing non-AI fallback if the backend is down.
       response = "I am but a humble cat oracle. Ask me for a fact — or type \"help\".";
     }
   }
