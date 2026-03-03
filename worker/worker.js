@@ -1,6 +1,11 @@
 export default {
   async fetch(req, env) {
     // CORS (tighten origin to your domain when ready)
+    const allowedOrigin = "https://yourusername.github.io";
+
+    if (req.headers.get("origin") !== allowedOrigin) {
+      return new Response("Forbidden", { status: 403 });
+    }
     const cors = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, OPTIONS",

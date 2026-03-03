@@ -175,6 +175,7 @@ function buildPageContext() {
 
 const input = document.getElementById("catGPTInput");
 const messages = document.getElementById("catGPTMessages");
+const AI_ENDPOINT = "https://the-cat-emporium-worker.angsutton03.workers.dev";
 
 const catFacts = [
   "Cats sleep 12–16 hours a day.",
