@@ -2,22 +2,16 @@
    Dev Mode Toggle Hook
 ================================= */
 
-const devMode = window.settings?.devMode === true; 
-// or however you store your setting
+const devMode = localStorage.getItem(devMode) === true; 
 const CHAT_STORAGE_KEY = "tce_chat_history_v1";
 
 if (devMode) {
-  document.getElementById("catGPT").classList.remove("hidden");
+  document.getElementById("catGPT").classList.remove("hidden-cat-gpt");
 }
-if (window.settings?.devMode || true /* allow public use */) {
-  loadCat();
-}
-
-<div id="catGPT" class="hidden-cat-gpt">
-  <div class="cat-header">🐱 The Cat EmporiumGPT</div>
-  <div id="catGPTMessages" class="cat-messages"></div>
-  <input id="catGPTInput" placeholder="Ask about cats or this site..." />
-</div>
+// i havent decided on this yet...
+//if (window.settings?.devMode || true /* allow public use */) {
+//  loadCat();
+//}
 #catGPT {
   position: fixed;
   bottom: 20px;
@@ -55,43 +49,51 @@ if (window.settings?.devMode || true /* allow public use */) {
   background: #222;
   color: #fff;
 }
-<script>
-/* Toggle Visibility Based on Your Dev Mode Setting */
-const devMode = window.settings?.devMode === true;
-
-if (devMode) {
-  document.getElementById("catGPT").classList.remove("hidden-cat-gpt");
+.cat-header {
+  padding: 8px;
+  background: #ff8c00;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
 }
 
-/* Chat Interaction */
-const catInput = document.getElementById("catGPTInput");
-const catMessages = document.getElementById("catGPTMessages");
-
-catInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    const msg = catInput.value.trim();
-    if (!msg) return;
-
-    addCatMessage("You", msg);
-    catInput.value = "";
-    const reply = catBrain(msg);
-    setTimeout(() => addCatMessage("Cat EmporiumGPT", reply), 300);
-  }
-});
-
-function addCatMessage(sender, text, save = true) {
-  const div = document.createElement("div");
-  div.innerHTML = `<strong>${sender}:</strong> ${text}`;
-  catMessages.appendChild(div);
-  catMessages.scrollTop = catMessages.scrollHeight;
-
-  if (save) {
-    saveMessage(sender, text);
-  }
+.cat-avatar {
+  font-size: 24px;
+  animation: float 2.5s ease-in-out infinite;
+  transition: transform 0.2s ease;
 }
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0px); }
+}
+
+.cat-thinking {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+<div id="catGPT" class="hidden-cat-gpt">
+  <div class="cat-header">
+    <div class="cat-avatar" id="catAvatar">🐱</div>
+    <span>The Cat EmporiumGPT</span>
+  </div>
+  <input type="file" id="chatImport" accept=".tcechat" style="display:none;"></input>
+  <div id="catGPTMessages" class="cat-messages"></div>
+  <input id="catGPTInput" placeholder="Ask about cats..." />
+</div>
+
+
 
 /* Custom Brain Logic */
-function catBrain(text) {
+/*function catBrain(text) {
   text = text.toLowerCase();
 
   if (text.includes("hello") || text.includes("hi")) {
@@ -123,45 +125,16 @@ function catBrain(text) {
   }
 
   return "Meow? I know about cats, images, and page elements!";
-}
-</script>
-<div id="catGPT" class="hidden-cat-gpt">
-  <div class="cat-header">
-    <div class="cat-avatar" id="catAvatar">🐱</div>
-    <span>The Cat EmporiumGPT</span>
-  </div>
-  <div id="catGPTMessages" class="cat-messages"></div>
-  <input id="catGPTInput" placeholder="Ask about cats..." />
-</div>
-.cat-header {
-  padding: 8px;
-  background: #ff8c00;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: bold;
-}
+}*/
 
-.cat-avatar {
-  font-size: 24px;
-  animation: float 2.5s ease-in-out infinite;
-  transition: transform 0.2s ease;
-}
 
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-4px); }
-  100% { transform: translateY(0px); }
-}
+/* ===============================
+   Cat Brain
+================================= */
 
-.cat-thinking {
-  animation: spin 1s linear infinite;
-}
+const input = document.getElementById("catInput");
+const messages = document.getElementById("catMessages");
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
 const catFacts = [
   "Cats sleep 12–16 hours a day.",
   "A group of cats is called a clowder.",
@@ -174,13 +147,6 @@ const catFacts = [
   "Ancient Egyptians worshipped cats.",
   "Cats can jump up to six times their body length."
 ];
-
-/* ===============================
-   Cat Brain
-================================= */
-
-const input = document.getElementById("catInput");
-const messages = document.getElementById("catMessages");
 
 input.addEventListener("keydown", function(e) {
   if (e.key === "Enter") {
@@ -195,22 +161,25 @@ input.addEventListener("keydown", function(e) {
   }
 });
 
-function addMessage(sender, text) {
+function addCatMessage(sender, text, save = true) {
   const div = document.createElement("div");
   div.innerHTML = `<strong>${sender}:</strong> ${text}`;
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
+  catMessages.appendChild(div);
+  catMessages.scrollTop = catMessages.scrollHeight;
+
+  if (save) {
+    saveMessage(sender, text);
+  }
 }
 window.catKnowledge = {
-  owner: "Your Name",
+  owner: "********",
   about: "Creative developer building fun web experiments.",
   projects: [
     { name: "Project One", desc: "Interactive portfolio piece." },
     { name: "Project Two", desc: "AI-powered widget." }
   ],
   socials: {
-    github: "https://github.com/yourname",
-    twitter: "https://twitter.com/yourname"
+    github: "https://github.com/el-snell"
   }
 };
 const catMoods = ["😼", "😺", "🐾", "😸", "😽"];
@@ -310,7 +279,7 @@ function clearChat() {
   catMessages.innerHTML = "";
 }
 loadChatHistory();
-<input type="file" id="chatImport" accept=".tcechat" style="display:none;"></input>
+
 /* ===============================
    Response Engine
 ================================= */
@@ -354,6 +323,12 @@ async function catBrain(text) {
     response = await fetchRepoInfo();
   }
   
+  else if (devMode && text.startsWith("/inspect")) {
+    const sel = text.replace("/inspect", "").trim();
+    const el = document.querySelector(sel);
+    return el ? `Found <${el.tagName.toLowerCase()}>` : "Not found.";
+  }
+  
   else if (window.settings?.devMode && text === "/export") {
     exportChat();
     response = "Chat exported as .tcechat file.";
@@ -367,6 +342,11 @@ async function catBrain(text) {
   else if (window.settings?.devMode && text === "/clear") {
     clearChat();
     response = "Chat history cleared.";
+  }
+  
+  else if (devMode && text === "/dumpimages") {
+    const srcs = [...document.querySelectorAll("img")].map(i => i.src);
+    return "Image sources:\n" + srcs.join("\n");
   }
 
   else {

@@ -3,6 +3,7 @@ const menu = document.getElementById("settingsMenu");
 const darkToggle = document.getElementById("darkToggle");
 //const notifToggle = document.getElementById("notifToggle");
 const extToggle = document.getElementById("extToggle");
+const devMode = document.getElementById("devMode")
 const middle = document.querySelector(".middle")
 const normal = document.querySelector(".normal")
 const extended = document.querySelector(".extended")
@@ -64,6 +65,23 @@ extToggle.addEventListener("change", function() {
   normal.style.display = isExt ? "inline" : "none";
   extended.style.display = isExt ? "none" : "inline";
   localStorage.setItem("extPara", isExt);
+  reload_page()
+});
+
+// Load saved dev mode
+if (localStorage.getItem("devMode") === "true") {
+  devMode.checked = true;
+  
+} else if (localStorage.getItem("devMode") === "false") {
+  devMode.checked = false;
+  
+}
+
+// Toggle dev mode
+devMode.addEventListener("change", function() {
+  const isDev = devMode.checked;
+  
+  localStorage.setItem("devMode", isDev);
   reload_page()
 });
 
