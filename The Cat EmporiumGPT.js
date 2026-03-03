@@ -1,0 +1,379 @@
+/* ===============================
+   Dev Mode Toggle Hook
+================================= */
+
+const devMode = window.settings?.devMode === true; 
+// or however you store your setting
+const CHAT_STORAGE_KEY = "tce_chat_history_v1";
+
+if (devMode) {
+  document.getElementById("catGPT").classList.remove("hidden");
+}
+if (window.settings?.devMode || true /* allow public use */) {
+  loadCat();
+}
+
+<div id="catGPT" class="hidden-cat-gpt">
+  <div class="cat-header">🐱 The Cat EmporiumGPT</div>
+  <div id="catGPTMessages" class="cat-messages"></div>
+  <input id="catGPTInput" placeholder="Ask about cats or this site..." />
+</div>
+#catGPT {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 280px;
+  background: #161616;
+  color: #fff;
+  border-radius: 10px;
+  font-family: "Segoe UI", sans-serif;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.hidden-cat-gpt { display: none; }
+
+.cat-header {
+  padding: 10px;
+  background: #ff8c00;
+  font-weight: bold;
+  text-align: center;
+}
+
+.cat-messages {
+  padding: 10px;
+  height: 200px;
+  overflow-y: auto;
+  font-size: 13px;
+}
+
+#catGPTInput {
+  border: none;
+  padding: 10px;
+  border-top: 1px solid #333;
+  background: #222;
+  color: #fff;
+}
+<script>
+/* Toggle Visibility Based on Your Dev Mode Setting */
+const devMode = window.settings?.devMode === true;
+
+if (devMode) {
+  document.getElementById("catGPT").classList.remove("hidden-cat-gpt");
+}
+
+/* Chat Interaction */
+const catInput = document.getElementById("catGPTInput");
+const catMessages = document.getElementById("catGPTMessages");
+
+catInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    const msg = catInput.value.trim();
+    if (!msg) return;
+
+    addCatMessage("You", msg);
+    catInput.value = "";
+    const reply = catBrain(msg);
+    setTimeout(() => addCatMessage("Cat EmporiumGPT", reply), 300);
+  }
+});
+
+function addCatMessage(sender, text, save = true) {
+  const div = document.createElement("div");
+  div.innerHTML = `<strong>${sender}:</strong> ${text}`;
+  catMessages.appendChild(div);
+  catMessages.scrollTop = catMessages.scrollHeight;
+
+  if (save) {
+    saveMessage(sender, text);
+  }
+}
+
+/* Custom Brain Logic */
+function catBrain(text) {
+  text = text.toLowerCase();
+
+  if (text.includes("hello") || text.includes("hi")) {
+    return "Meow! 🐾 Welcome! Want cat facts or site help?";
+  }
+
+  if (text.includes("cats")) {
+    return "Cats purr when happy and nap often 🐱.";
+  }
+
+  if (text.includes("images")) {
+    const imgs = document.querySelectorAll("img").length;
+    return `I count ${imgs} cat images on this page!`;
+  }
+
+  if (text.includes("dark mode")) {
+    return "Dark Mode is an excellent choice for nocturnal cats 😼.";
+  }
+
+  if (devMode && text.startsWith("/inspect")) {
+    const sel = text.replace("/inspect", "").trim();
+    const el = document.querySelector(sel);
+    return el ? `Found <${el.tagName.toLowerCase()}>` : "Not found.";
+  }
+
+  if (devMode && text === "/dumpimages") {
+    const srcs = [...document.querySelectorAll("img")].map(i => i.src);
+    return "Image sources:\n" + srcs.join("\n");
+  }
+
+  return "Meow? I know about cats, images, and page elements!";
+}
+</script>
+<div id="catGPT" class="hidden-cat-gpt">
+  <div class="cat-header">
+    <div class="cat-avatar" id="catAvatar">🐱</div>
+    <span>The Cat EmporiumGPT</span>
+  </div>
+  <div id="catGPTMessages" class="cat-messages"></div>
+  <input id="catGPTInput" placeholder="Ask about cats..." />
+</div>
+.cat-header {
+  padding: 8px;
+  background: #ff8c00;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+}
+
+.cat-avatar {
+  font-size: 24px;
+  animation: float 2.5s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0px); }
+}
+
+.cat-thinking {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+const catFacts = [
+  "Cats sleep 12–16 hours a day.",
+  "A group of cats is called a clowder.",
+  "Cats have five toes on their front paws but four on the back.",
+  "A cat's nose print is unique like a fingerprint.",
+  "Cats can rotate their ears 180 degrees.",
+  "The world's oldest cat lived to be 38 years old.",
+  "Cats use their whiskers to measure spaces.",
+  "Purring can help heal bones and tissues.",
+  "Ancient Egyptians worshipped cats.",
+  "Cats can jump up to six times their body length."
+];
+
+/* ===============================
+   Cat Brain
+================================= */
+
+const input = document.getElementById("catInput");
+const messages = document.getElementById("catMessages");
+
+input.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    const userMessage = input.value.trim();
+    if (!userMessage) return;
+
+    addMessage("You", userMessage);
+    input.value = "";
+
+    const reply = catBrain(userMessage);
+    setTimeout(() => addMessage("Cat EmporiumGPT", reply), 300);
+  }
+});
+
+function addMessage(sender, text) {
+  const div = document.createElement("div");
+  div.innerHTML = `<strong>${sender}:</strong> ${text}`;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+window.catKnowledge = {
+  owner: "Your Name",
+  about: "Creative developer building fun web experiments.",
+  projects: [
+    { name: "Project One", desc: "Interactive portfolio piece." },
+    { name: "Project Two", desc: "AI-powered widget." }
+  ],
+  socials: {
+    github: "https://github.com/yourname",
+    twitter: "https://twitter.com/yourname"
+  }
+};
+const catMoods = ["😼", "😺", "🐾", "😸", "😽"];
+
+function randomMood() {
+  return catMoods[Math.floor(Math.random() * catMoods.length)];
+}
+
+function randomFact() {
+  return catFacts[Math.floor(Math.random() * catFacts.length)];
+}
+async function fetchRepoInfo() {
+  try {
+    const res = await fetch("https://api.github.com/repos/el-snell/The-Cat-Emporium");
+    const data = await res.json();
+
+    return `
+⭐ Stars: ${data.stargazers_count}
+🍴 Forks: ${data.forks_count}
+📅 Last Updated: ${new Date(data.updated_at).toLocaleDateString()}
+    `;
+  } catch {
+    return "Could not fetch repo data.";
+  }
+}
+function isDarkMode() {
+  return document.body.classList.contains("dark");
+}
+function saveMessage(sender, text) {
+  const history = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY)) || [];
+  history.push({ sender, text, timestamp: Date.now() });
+  localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(history));
+}
+
+function loadChatHistory() {
+  const history = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY)) || [];
+  history.forEach(msg => {
+    addCatMessage(msg.sender, msg.text, false);
+  });
+}
+function exportChat() {
+  const history = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY)) || [];
+
+  const chatFile = {
+    version: "1.0",
+    created: Date.now(),
+    site: "The Cat Emporium",
+    messages: history
+  };
+
+  const blob = new Blob(
+    [JSON.stringify(chatFile, null, 2)],
+    { type: "application/json" }
+  );
+
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "chat.tcechat";
+  a.click();
+}
+const chatImport = document.getElementById("chatImport");
+
+function importChat() {
+  chatImport.click();
+}
+
+chatImport.addEventListener("change", function() {
+  const file = this.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+
+      if (data.version && data.messages) {
+        localStorage.setItem(
+          CHAT_STORAGE_KEY,
+          JSON.stringify(data.messages)
+        );
+
+        catMessages.innerHTML = "";
+        loadChatHistory();
+        alert("Chat imported successfully 🐾");
+      } else {
+        alert("Invalid .tcechat file.");
+      }
+    } catch {
+      alert("Error reading file.");
+    }
+  };
+
+  reader.readAsText(file);
+});
+function clearChat() {
+  localStorage.removeItem(CHAT_STORAGE_KEY);
+  catMessages.innerHTML = "";
+}
+loadChatHistory();
+<input type="file" id="chatImport" accept=".tcechat" style="display:none;"></input>
+/* ===============================
+   Response Engine
+================================= */
+
+async function catBrain(text) {
+  text = text.toLowerCase();
+  const avatar = document.getElementById("catAvatar");
+
+  avatar.classList.add("cat-thinking");
+
+  let response;
+
+  if (text.includes("fact")) {
+    response = randomFact() + " " + randomMood();
+  }
+
+  else if (text.includes("hello") || text.includes("hi")) {
+    response = "Welcome to The Cat Emporium. I guard this realm. " + randomMood();
+  }
+
+  else if (text.includes("how many images")) {
+    const imgs = document.querySelectorAll("img").length;
+    response = `There are ${imgs} glorious cat images on this page.`;
+  }
+
+  else if (text.includes("github")) {
+    response = "This site lives proudly on GitHub Pages.";
+  }
+  
+  else if (text.includes("theme")) {
+    response = isDarkMode()
+      ? "The shadows embrace us."
+      : "The sun shines upon the cats.";
+  }
+
+  else if (text.includes("dark mode")) {
+    response = "Dark Mode suits nocturnal hunters like me.";
+  }
+
+  else if (window.settings?.devMode && text === "/repo") {
+    response = await fetchRepoInfo();
+  }
+  
+  else if (window.settings?.devMode && text === "/export") {
+    exportChat();
+    response = "Chat exported as .tcechat file.";
+  }
+  
+  else if (window.settings?.devMode && text === "/import") {
+    importChat();
+    response = "Select a .tcechat file to import.";
+  }
+    
+  else if (window.settings?.devMode && text === "/clear") {
+    clearChat();
+    response = "Chat history cleared.";
+  }
+
+  else {
+    response = "I am but a humble cat oracle. Ask me for a fact.";
+  }
+
+  setTimeout(() => avatar.classList.remove("cat-thinking"), 500);
+
+  return response;
+}

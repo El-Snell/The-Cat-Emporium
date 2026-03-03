@@ -61,6 +61,26 @@
       </div>
 		</div>
 	</div>
+  <button onclick="downloadBackup()">Download Session Backup</button>
+
+  <script>
+  function downloadBackup() {
+    const data = {
+      version: "1.0",
+      site: "The Cat Emporium",
+      created: Date.now(),
+      messages: [
+        { sender: "User", text: "Built Cat EmporiumGPT with avatar, personality, GitHub integration, and .tcechat system." }
+      ]
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "CatEmporiumGPT_Backup.tcechat";
+    a.click();
+  }
+  </script>
 	<div class="menu2">
 		<section>
 			<ul>
