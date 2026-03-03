@@ -11,5 +11,5 @@
     "noEmit": true,
     "types": []
   },
-  "include": ["node_modules/typescript/lib/**/*"]
+  "include": ["node_modules/typescript/lib/typescript.d.ts"]
 }
