@@ -49,6 +49,78 @@ if (devMode) {
   return "Meow? I know about cats, images, and page elements!";
 }*/
 
+/* ===============================
+   Helper: tiny intent utils
+================================= */
+
+function includesAny(t, arr) {
+  return arr.some(w => t.includes(w));
+}
+
+function normalize(s) {
+  return String(s || "").toLowerCase().trim();
+}
+
+function listProjects() {
+  const projects = window.catKnowledge?.projects || [];
+  if (!projects.length) return "No projects are listed yet.";
+  return projects.map(p => `• ${p.name}: ${p.desc}`).join("\n");
+}
+
+function getSocials() {
+  const socials = window.catKnowledge?.socials || {};
+  const keys = Object.keys(socials);
+  if (!keys.length) return "No socials are listed yet.";
+  return keys.map(k => `• ${k}: ${socials[k]}`).join("\n");
+}
+
+function pageSummary() {
+  const title = document.title || "(untitled)";
+  const url = location.href;
+  const imgs = document.querySelectorAll("img").length;
+  const links = document.querySelectorAll("a").length;
+  const forms = document.querySelectorAll("form").length;
+  return `Page: ${title}\nURL: ${url}\nLinks: ${links} | Images: ${imgs} | Forms: ${forms}`;
+}
+
+function findTextOnPage(query) {
+  const q = normalize(query);
+  if (!q) return "Tell me what text to find. Example: find \"shop\"";
+  const bodyText = normalize(document.body?.innerText || "");
+  const idx = bodyText.indexOf(q);
+  if (idx === -1) return `I couldn't find "${query}" on this page.`;
+  // show a small snippet around it
+  const start = Math.max(0, idx - 60);
+  const end = Math.min(bodyText.length, idx + q.length + 60);
+  const snippet = (document.body.innerText || "").slice(start, end).replace(/\s+/g, " ").trim();
+  return `Found it:\n“…${snippet}…”`;
+}
+
+function helperHelp(isDev) {
+  const base =
+`Try:
+• "help" – show commands
+• "page" – page summary (title/url/counts)
+• "projects" – list site projects
+• "about" / "owner" – info from catKnowledge
+• "socials" / "github link" – links from catKnowledge
+• "find <text>" – search for text on this page
+• "how many images" – count images
+• "theme" / "dark mode" – theme response
+• "fact" – random cat fact`;
+
+  const dev =
+`\nDev commands:
+• /inspect <css selector>
+• /dumpimages
+• /repo
+• /export
+• /import
+• /clear`;
+
+  return isDev ? base + dev : base;
+}
+
 
 /* ===============================
    Cat Brain
@@ -207,75 +279,124 @@ loadChatHistory();
 ================================= */
 
 async function catBrain(text) {
-  text = text.toLowerCase();
+  text = String(text || "");
+  const t = text.toLowerCase();
   const avatar = document.getElementById("catAvatar");
-
   avatar.classList.add("cat-thinking");
+
+  // keep your dev logic exactly as you already use it:
+  const isDev = Boolean(window.settings?.devMode) || devMode;
 
   let response;
 
-  if (text.includes("fact")) {
+  /* --- NEW: help / command discovery --- */
+  if (t === "help" || t === "commands" || t === "menu" || t === "?") {
+    response = helperHelp(isDev);
+  }
+
+  /* --- Existing behavior: facts/greetings/page/theme/github --- */
+  else if (t.includes("fact")) {
     response = randomFact() + " " + randomMood();
   }
 
-  else if (text.includes("hello") || text.includes("hi")) {
+  else if (t.includes("hello") || t.includes("hi")) {
     response = "Welcome to The Cat Emporium. I guard this realm. " + randomMood();
   }
 
-  else if (text.includes("how many images")) {
+  else if (t.includes("how many images")) {
     const imgs = document.querySelectorAll("img").length;
     response = `There are ${imgs} glorious cat images on this page.`;
   }
 
-  else if (text.includes("github")) {
-    response = "This site lives proudly on GitHub Pages.";
+  else if (t.includes("github")) {
+    // keep existing response, but if user asks for link, be more helpful
+    if (includesAny(t, ["link", "url", "profile", "repo"])) {
+      const gh = window.catKnowledge?.socials?.github;
+      response = gh ? `GitHub: ${gh}` : "This site lives proudly on GitHub Pages.";
+    } else {
+      response = "This site lives proudly on GitHub Pages.";
+    }
   }
-  
-  else if (text.includes("theme")) {
+
+  else if (t.includes("theme")) {
     response = isDarkMode()
       ? "The shadows embrace us."
       : "The sun shines upon the cats.";
   }
 
-  else if (text.includes("dark mode")) {
+  else if (t.includes("dark mode")) {
     response = "Dark Mode suits nocturnal hunters like me.";
   }
 
-  else if (window.settings?.devMode && text === "/repo") {
+  /* --- NEW: site helper intents using catKnowledge --- */
+  else if (includesAny(t, ["about", "who are you", "what are you"])) {
+    const about = window.catKnowledge?.about;
+    response = about ? about : "I am the Cat Emporium helper.";
+  }
+
+  else if (includesAny(t, ["owner", "creator", "made you", "who made"])) {
+    const owner = window.catKnowledge?.owner;
+    response = owner ? `Owner: ${owner}` : "Owner info is not set.";
+  }
+
+  else if (includesAny(t, ["projects", "project"])) {
+    response = listProjects();
+  }
+
+  else if (includesAny(t, ["socials", "social", "links"])) {
+    response = getSocials();
+  }
+
+  /* --- NEW: page utilities --- */
+  else if (t === "page" || t === "page info" || t === "summary") {
+    response = pageSummary();
+  }
+
+  else if (t.startsWith("find ")) {
+    response = findTextOnPage(text.slice(5));
+  }
+
+  /* --- Existing dev commands (unchanged behavior) --- */
+  else if (window.settings?.devMode && t === "/repo") {
     response = await fetchRepoInfo();
   }
-  
-  else if (devMode && text.startsWith("/inspect")) {
-    const sel = text.replace("/inspect", "").trim();
+
+  else if (devMode && t.startsWith("/inspect")) {
+    const sel = t.replace("/inspect", "").trim();
     const el = document.querySelector(sel);
     response = el ? `Found <${el.tagName.toLowerCase()}>` : "Not found.";
   }
-  
-  else if (window.settings?.devMode && text === "/export") {
+
+  else if (window.settings?.devMode && t === "/export") {
     exportChat();
     response = "Chat exported as .tcechat file.";
   }
-  
-  else if (window.settings?.devMode && text === "/import") {
+
+  else if (window.settings?.devMode && t === "/import") {
     importChat();
     response = "Select a .tcechat file to import.";
   }
-    
-  else if (window.settings?.devMode && text === "/clear") {
+
+  else if (window.settings?.devMode && t === "/clear") {
     clearChat();
     response = "Chat history cleared.";
   }
-  
-  else if (devMode && text === "/dumpimages") {
+
+  else if (devMode && t === "/dumpimages") {
     const srcs = [...document.querySelectorAll("img")].map(i => i.src);
     response = "Image sources:\n" + srcs.join("\n");
   }
 
+  /* --- NEW: smarter fallback (still safe + minimal) --- */
   else {
-    response = "I am but a humble cat oracle. Ask me for a fact.";
+    // If they ask a question, give direction instead of dead-end
+    if (t.includes("?") || includesAny(t, ["how", "where", "what", "can you"])) {
+      response = `I can help with site info and quick page checks.\nType "help" to see what I can do. ${randomMood()}`;
+    } else {
+      response = "I am but a humble cat oracle. Ask me for a fact — or type \"help\".";
+    }
   }
 
   setTimeout(() => avatar.classList.remove("cat-thinking"), 500);
-
   return response;
 }
