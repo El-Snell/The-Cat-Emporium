@@ -2,7 +2,7 @@
    Dev Mode Toggle Hook
 ================================= */
 
-const devMode = localStorage.getItem(devMode) === true; 
+const devMode = localStorage.getItem("devMode") === true; 
 const CHAT_STORAGE_KEY = "tce_chat_history_v1";
 
 if (devMode) {
@@ -132,8 +132,8 @@ if (devMode) {
    Cat Brain
 ================================= */
 
-const input = document.getElementById("catInput");
-const messages = document.getElementById("catMessages");
+const input = document.getElementById("catGPTInput");
+const messages = document.getElementById("catGPTMessages");
 
 const catFacts = [
   "Cats sleep 12–16 hours a day.",
@@ -153,19 +153,19 @@ input.addEventListener("keydown", function(e) {
     const userMessage = input.value.trim();
     if (!userMessage) return;
 
-    addMessage("You", userMessage);
+    addCatMessage("You", userMessage);
     input.value = "";
 
     const reply = catBrain(userMessage);
-    setTimeout(() => addMessage("Cat EmporiumGPT", reply), 300);
+    setTimeout(() => addCatMessage("Cat EmporiumGPT", reply), 300);
   }
 });
 
 function addCatMessage(sender, text, save = true) {
   const div = document.createElement("div");
   div.innerHTML = `<strong>${sender}:</strong> ${text}`;
-  catMessages.appendChild(div);
-  catMessages.scrollTop = catMessages.scrollHeight;
+  catGPTMessages.appendChild(div);
+  catGPTMessages.scrollTop = catGPTMessages.scrollHeight;
 
   if (save) {
     saveMessage(sender, text);
@@ -261,7 +261,7 @@ chatImport.addEventListener("change", function() {
           JSON.stringify(data.messages)
         );
 
-        catMessages.innerHTML = "";
+        catGPTMessages.innerHTML = "";
         loadChatHistory();
         alert("Chat imported successfully 🐾");
       } else {
@@ -276,7 +276,7 @@ chatImport.addEventListener("change", function() {
 });
 function clearChat() {
   localStorage.removeItem(CHAT_STORAGE_KEY);
-  catMessages.innerHTML = "";
+  catGPTMessages.innerHTML = "";
 }
 loadChatHistory();
 
@@ -326,7 +326,7 @@ async function catBrain(text) {
   else if (devMode && text.startsWith("/inspect")) {
     const sel = text.replace("/inspect", "").trim();
     const el = document.querySelector(sel);
-    return el ? `Found <${el.tagName.toLowerCase()}>` : "Not found.";
+    response = el ? `Found <${el.tagName.toLowerCase()}>` : "Not found.";
   }
   
   else if (window.settings?.devMode && text === "/export") {
@@ -346,7 +346,7 @@ async function catBrain(text) {
   
   else if (devMode && text === "/dumpimages") {
     const srcs = [...document.querySelectorAll("img")].map(i => i.src);
-    return "Image sources:\n" + srcs.join("\n");
+    response = "Image sources:\n" + srcs.join("\n");
   }
 
   else {
