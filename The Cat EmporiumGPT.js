@@ -2,7 +2,7 @@
    Dev Mode Toggle Hook
 ================================= */
 
-const devMode = localStorage.getItem("devMode") === true; 
+const devMode = localStorage.getItem("devMode") === "true"; 
 const CHAT_STORAGE_KEY = "tce_chat_history_v1";
 
 if (devMode) {
