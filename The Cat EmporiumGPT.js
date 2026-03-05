@@ -208,26 +208,36 @@ document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("catGPTInput");
   if (!input) return;
 
-  async function sendMessage() => {
-    // Physical keyboard support + safety
-    //if (e.key !== "Enter" && e.keyCode !== 13) return;
-    //if (e.shiftKey) return; // allow Shift+Enter if you ever want multiline
+  const input = document.getElementById("catGPTInput");
 
-    //e.preventDefault;
+  input.addEventListener("keydown", async (e) => {
+    // DEBUG PROOF: you should see this when you press keys
+    // Remove later.
+    if (e.key === "Enter" || e.key === "NumpadEnter" || e.keyCode === 13) {
+      e.preventDefault();
 
-    const userMessage = input.value.trim();
-    if (!userMessage) return;
+      try {
+        const userMessage = input.value.trim();
+        addCatMessage("System", `Send triggered (key=${e.key})`, false); // remove later
 
-    addCatMessage("You", userMessage);
-    input.value = "";
+        if (!userMessage) return;
 
-    const reply = await catBrain(userMessage);
-    setTimeout(() => addCatMessage("Cat EmporiumGPT", reply), 300);
+        addCatMessage("You", userMessage);
+        input.value = "";
+
+        const reply = await catBrain(userMessage);
+        addCatMessage("Cat EmporiumGPT", reply);
+      } catch (err) {
+        addCatMessage("System", `ERROR: ${err?.message || err}`, false);
+      }
+    }
   });
 });
-/*async function sendMessage() => {
+/*input.addEventListener("keydown", async (e) => {
+  if (e.key !== "Enter" && e.keyCode !== 13) return;
+
   const userMessage = input.value.trim();
-  if (!userMessage) {return;};
+  if (!userMessage) return;
 
   addCatMessage("You", userMessage);
   input.value = "";
