@@ -208,12 +208,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("catGPTInput");
   if (!input) return;
 
-  input.addEventListener("keydown", async (e) => {
+  async function sendMessage() => {
     // Physical keyboard support + safety
-    if (e.key !== "Enter" && e.keyCode !== 13) return;
-    if (e.shiftKey) return; // allow Shift+Enter if you ever want multiline
+    //if (e.key !== "Enter" && e.keyCode !== 13) return;
+    //if (e.shiftKey) return; // allow Shift+Enter if you ever want multiline
 
-    e.preventDefault();
+    //e.preventDefault;
 
     const userMessage = input.value.trim();
     if (!userMessage) return;
@@ -225,11 +225,9 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => addCatMessage("Cat EmporiumGPT", reply), 300);
   });
 });
-input.addEventListener("keydown", async (e) => {
-  if (e.key !== "Enter" && e.keyCode !== 13) return;
-
+/*async function sendMessage() => {
   const userMessage = input.value.trim();
-  if (!userMessage) return;
+  if (!userMessage) {return;};
 
   addCatMessage("You", userMessage);
   input.value = "";
@@ -242,7 +240,7 @@ input.addEventListener("keydown", async (e) => {
   } catch (err) {
     catLog("Chat error", err?.message || err);
   }
-});
+});*/
 
 function addCatMessage(sender, text, save = true) {
   const div = document.createElement("div");
