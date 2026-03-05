@@ -136,14 +136,14 @@ function buildPageContext() {
     .join("\n");
 
   // Lightweight DOM snapshot: main landmarks + ids/classes (no full HTML dump)
-  const landmarks = Array.from(document.querySelectorAll("header, nav, main, section, footer"))
+  /*const landmarks = Array.from(document.querySelectorAll("header, nav, main, section, footer"))
     .slice(0, 12)
     .map(el => {
       const id = el.id ? `#${el.id}` : "";
       const cls = el.className ? `.${String(el.className).trim().split(/\s+/).slice(0, 3).join(".")}` : "";
       return `<${el.tagName.toLowerCase()}${id}${cls}>`;
     })
-    .join("\n");
+    .join("\n");*/
 
   const counts = {
     links: document.querySelectorAll("a").length,
@@ -163,7 +163,7 @@ function buildPageContext() {
     url,
     counts,
     assets: { styles, scripts },
-    landmarks,
+//    landmarks,
     textSample
   };
 }
@@ -191,7 +191,7 @@ const catFacts = [
 ];
 
 input.addEventListener("keydown", function(e) {
-  if (e.key === "enter") {
+  if (e.key === "Enter") {
     const userMessage = input.value.trim();
     if (!userMessage) return;
 
@@ -199,7 +199,7 @@ input.addEventListener("keydown", function(e) {
     input.value = "";
 
     const reply = catBrain(userMessage);
-    setTimeout(() => addCatMessage("Cat EmporiumGPT", reply), 300);
+    setTimeout(addCatMessage("Cat EmporiumGPT", reply), 300);
   }
 });
 
