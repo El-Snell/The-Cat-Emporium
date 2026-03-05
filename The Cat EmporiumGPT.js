@@ -190,7 +190,7 @@ const catFacts = [
   "Cats can jump up to six times their body length."
 ];
 
-input.addEventListener("keydown", function(e) {
+function sendMessage(e) {
   if (e.key === "Enter") {
     const userMessage = input.value.trim();
     if (!userMessage) return;
@@ -201,7 +201,7 @@ input.addEventListener("keydown", function(e) {
     const reply = catBrain(userMessage);
     setTimeout(() => addCatMessage("Cat EmporiumGPT", reply), 300);
   }
-});
+};
 
 function addCatMessage(sender, text, save = true) {
   const div = document.createElement("div");
@@ -351,7 +351,7 @@ async function catBrain(text) {
   avatar.classList.add("cat-thinking");
 
   // keep your dev logic exactly as you already use it:
-  const isDev = Boolean(window.settings?.devMode) || devMode;
+  const isDev = Boolean(localStorage.getItem("devMode")) || devMode;
 
   let response;
 
