@@ -53,6 +53,20 @@ if (devMode) {
    Helper: tiny intent utils
 ================================= */
 
+function setCatStatus(msg, show = true) {
+  const el = document.getElementById("catStatus");
+  if (!el) return;
+  el.style.display = show ? "block" : "none";
+  el.textContent = msg;
+}
+
+function catLog(label, data) {
+  // Writes to chat + status so you can see issues on mobile
+  const text = data ? `${label}: ${String(data)}` : label;
+  setCatStatus(text, true);
+  try { addCatMessage("System", text, false); } catch {}
+}
+
 function includesAny(t, arr) {
   return arr.some(w => t.includes(w));
 }
@@ -190,19 +204,24 @@ const catFacts = [
   "Cats can jump up to six times their body length."
 ];
 
-function sendMessage(e) {
-  const key = e.key
-  if (key === "Enter") {
-    const userMessage = input.value.trim();
-    if (!userMessage) return;
+input.addEventListener("keydown", async (e) => {
+  if (e.key !== "Enter" && e.keyCode !== 13) return;
 
-    addCatMessage("You", userMessage);
-    input.value = "";
+  const userMessage = input.value.trim();
+  if (!userMessage) return;
 
-    const reply = catBrain(userMessage);
-    setTimeout(() => addCatMessage("Cat EmporiumGPT", reply), 300);
+  addCatMessage("You", userMessage);
+  input.value = "";
+
+  try {
+    setCatStatus("Thinking…", true);
+    const reply = await catBrain(userMessage);
+    addCatMessage("Cat EmporiumGPT", reply);
+    setCatStatus("", false);
+  } catch (err) {
+    catLog("Chat error", err?.message || err);
   }
-};
+});
 
 function addCatMessage(sender, text, save = true) {
   const div = document.createElement("div");
