@@ -297,7 +297,9 @@ li {
   flex-direction: column;
 }
 
-.hidden-cat-gpt { display: none; }
+.hidden-cat-gpt {
+  display: none;
+}
 
 .cat-header {
   padding: 10px;
