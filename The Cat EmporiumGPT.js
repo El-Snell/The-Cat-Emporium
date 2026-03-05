@@ -191,7 +191,8 @@ const catFacts = [
 ];
 
 function sendMessage(e) {
-  if (e.key === "Enter") {
+  const key = e.key
+  if (key === "Enter") {
     const userMessage = input.value.trim();
     if (!userMessage) return;
 
