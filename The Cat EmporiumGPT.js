@@ -191,7 +191,7 @@ const catFacts = [
 ];
 
 input.addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
+  if (e.key === "enter") {
     const userMessage = input.value.trim();
     if (!userMessage) return;
 
