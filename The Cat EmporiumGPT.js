@@ -199,7 +199,7 @@ input.addEventListener("keydown", function(e) {
     input.value = "";
 
     const reply = catBrain(userMessage);
-    setTimeout(addCatMessage("Cat EmporiumGPT", reply), 300);
+    setTimeout(() => addCatMessage("Cat EmporiumGPT", reply), 300);
   }
 });
 
