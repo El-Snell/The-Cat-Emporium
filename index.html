@@ -59,33 +59,27 @@
           <span class="slider"></span>
         </label>
       </div>
+      <!-- Dev Mode -->
+      <div class="menu-item">
+        <div class="menu-left">
+          <!-- Gear icon -->
+          <svg viewBox="0 0 24 24">
+            <path fill="white" d="M12 1.75a2.25 2.25 0 0 1 2.25 2.25v.66a7.93 7.93 0 0 1 2.28 1.32l.46-.46a2.25 2.25 0 0 1 3.18 3.18l-.46.46a7.93 7.93 0 0 1 1.32 2.28h.66a2.25 2.25 0 0 1 0 4.5h-.66a7.93 7.93 0 0 1-1.32 2.28l.46.46a2.25 2.25 0 0 1-3.18 3.18l-.46-.46a7.93 7.93 0 0 1-2.28 1.32v.66a2.25 2.25 0 0 1-4.5 0v-.66a7.93 7.93 0 0 1-2.28-1.32l-.46.46a2.25 2.25 0 0 1-3.18-3.18l.46-.46a7.93 7.93 0 0 1-1.32-2.28h-.66a2.25 2.25 0 0 1 0-4.5h.66a7.93 7.93 0 0 1 1.32-2.28l-.46-.46a2.25 2.25 0 1 1 3.18-3.18l.46.46a7.93 7.93 0 0 1 2.28-1.32v-.66A2.25 2.25 0 0 1 12 1.75ZM12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/>
+          </svg>
+          <span>Dev Mode</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="devMode">
+          <span class="slider"></span>
+        </label>
+      </div>
 		</div>
 	</div>
-  <button onclick="downloadBackup()">Download Session Backup</button>
-
-  <script>
-  function downloadBackup() {
-    const data = {
-      version: "1.0",
-      site: "The Cat Emporium",
-      created: Date.now(),
-      messages: [
-        { sender: "User", text: "Built Cat EmporiumGPT with avatar, personality, GitHub integration, and .tcechat system." }
-      ]
-    };
-
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "CatEmporiumGPT_Backup.tcechat";
-    a.click();
-  }
-  </script>
 	<div class="menu2">
 		<section>
 			<ul>
 				<li>
-					<a href="luckytest.html"><img src="images/lucky_menu_cat_on_bed.png"></a>
+					<a href="lucky.html"><img src="images/lucky_menu_cat_on_bed.png"></a>
 				</li>
 				<li>
 					<a href="bean.html"><img src="images/bean_menu_cat_on_carpet.png"></a>
@@ -102,6 +96,9 @@
 				<li>
 					<a href="sonic.html"><img src="images/sonic_menu_cat_on_bed.png"></a>
 				</li>
+        <span class="dev"><li>
+					<a href="luckytest.html"><img src="images/lucky_menu_cat_on_bed.png"></a>
+				</li></span>
 			</ul>
 		</section>
 	</div>

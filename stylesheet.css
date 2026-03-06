@@ -283,6 +283,14 @@ li {
   padding-left: 10px;
   padding-right: 10px;
 } 
+.dev {
+  display: none;
+}
+.dev li {
+  width: 0%;
+  padding-left: 0px;
+  padding-right: 0px;
+}
 #catGPT {
   position: fixed;
   bottom: 20px;

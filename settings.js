@@ -7,6 +7,8 @@ const devMode = document.getElementById("devMode")
 const middle = document.querySelector(".middle")
 const normal = document.querySelector(".normal")
 const extended = document.querySelector(".extended")
+const dev = document.querySelector(".dev")
+const devMenuItem = document.querySelector(".dev li")
 
 // Reload page
 function reload_page() {
@@ -71,16 +73,31 @@ extToggle.addEventListener("change", function() {
 // Load saved dev mode
 if (localStorage.getItem("devMode") === "true") {
   devMode.checked = true;
-  
+  dev.style.display = "flex";
+  if (devMenuItem !== "null") {
+    devMenuItem.style.width = "20%";
+    devMenuItem.style.paddingleft = "10px";
+    devMenuItem.style.paddingright = "10px";
+  }
 } else if (localStorage.getItem("devMode") === "false") {
   devMode.checked = false;
-  
+  dev.style.display = "none";
+  if (devMenuItem !== "null") {
+    devMenuItem.style.width = "0%";
+    devMenuItem.style.paddingleft = "0px";
+    devMenuItem.style.paddingright = "0px";
+  }
 }
 
 // Toggle dev mode
 devMode.addEventListener("change", function() {
   const isDev = devMode.checked;
-  
+  dev.style.display = isDev ? "none" : "flex";
+  if (devMenuItem !== "null") {
+    devMenuItem.style.width = isDev ? "0%" : "20%";
+    devMenuItem.style.paddingleft = isDev ? "0px" : "10px";
+    devMenuItem.style.paddingright = isDev ? "0px" : "10px";
+  }
   localStorage.setItem("devMode", isDev);
   reload_page()
 });
