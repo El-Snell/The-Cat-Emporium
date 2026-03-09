@@ -213,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
   input.addEventListener("keydown", async (e) => {
     // DEBUG PROOF: you should see this when you press keys
     // Remove later.
-    if (e.key === "Enter" || e.key === "NumpadEnter" || e.keyCode === 13) {
+    if (e.key === "Enter" || e.key === "NumpadEnter" || e.code === "Enter") {
       e.preventDefault();
 
       try {
