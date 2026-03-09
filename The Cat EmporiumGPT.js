@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("catGPTInput");
   if (!input) return;
 
-  const input = document.getElementById("catGPTInput");
+  //const input = document.getElementById("catGPTInput");
 
   input.addEventListener("keydown", async (e) => {
     // DEBUG PROOF: you should see this when you press keys
