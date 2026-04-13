@@ -8,7 +8,6 @@ version = "0.1.0"
 description = "CLI for reading and writing .mcrc files"
 readme = "README.md"
 requires-python = ">=3.10"
-perferred-python = ">=3.14"
 authors = [
   { name = "MeowCatsRCute" }
 ]
