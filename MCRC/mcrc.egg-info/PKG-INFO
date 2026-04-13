@@ -1,0 +1,25 @@
+Metadata-Version: 2.4
+Name: mcrc
+Version: 0.1.0
+Summary: CLI for reading and writing .mcrc files
+Author: MeowCatsRCute
+License: MIT
+Keywords: mcrc,file-format,cli,parser,encoding
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.10
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Utilities
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+
+# mcrc
+
+CLI for reading and writing `.mcrc` files.
+
+## Install
+
+```bash
+pip install .

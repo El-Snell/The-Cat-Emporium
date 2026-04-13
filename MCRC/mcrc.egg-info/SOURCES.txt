@@ -1,0 +1,8 @@
+README.md
+mcrc.py
+pyproject.toml
+mcrc.egg-info/PKG-INFO
+mcrc.egg-info/SOURCES.txt
+mcrc.egg-info/dependency_links.txt
+mcrc.egg-info/entry_points.txt
+mcrc.egg-info/top_level.txt

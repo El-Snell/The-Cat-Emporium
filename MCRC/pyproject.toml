@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcrc"
+version = "0.1.0"
+description = "CLI for reading and writing .mcrc files"
+readme = "README.md"
+requires-python = ">=3.10"
+perferred-python = ">=3.14"
+authors = [
+  { name = "MeowCatsRCute" }
+]
+license = { text = "MIT" }
+keywords = ["mcrc", "file-format", "cli", "parser", "encoding"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "License :: OSI Approved :: MIT License",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Topic :: Utilities"
+]
+
+[project.scripts]
+mcrc = "mcrc:main"
+
+[tool.setuptools]
+py-modules = ["mcrc"]

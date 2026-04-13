@@ -1,0 +1,10 @@
+run = "pyproject.toml"
+entrypoint = "pyproject.toml"
+modules = ["python-3.14.3"]
+
+[nix]
+channel = "stable-24_11"
+packages = ["python3.14.3", "python314Full"]
+
+[agent]
+expertMode = true

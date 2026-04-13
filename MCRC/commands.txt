@@ -1,0 +1,5 @@
+mcrc decode file.mcrc
+mcrc decode file.mcrc --json
+mcrc inspect file.mcrc
+mcrc encode-text "Skegmen I love Mither!" -o example.mcrc
+mcrc encode-encrypted "Skegmen I love Mither!" -o encrypted.mcrc

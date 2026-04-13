@@ -1,0 +1,5 @@
+python mcrc.py decode file.mcrc
+python mcrc.py decode file.mcrc --json
+python mcrc.py inspect file.mcrc
+python mcrc.py encode-text "Skegmen I love Mither!" -o example.mcrc
+python mcrc.py encode-encrypted "Skegmen I love Mither!" -o encrypted.mcrc
