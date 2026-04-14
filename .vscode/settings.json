@@ -1,5 +1,12 @@
 {
     "editor.tabSize": 2,
     "telemetry.editStats.enabled": false,
-    "telemetry.feedback.enabled": false
+    "telemetry.feedback.enabled": false,
+    "python-envs.pythonProjects": [
+        {
+            "path": "MCRC",
+            "envManager": "ms-python.python:venv",
+            "packageManager": "ms-python.python:pip"
+        }
+    ]
 }
