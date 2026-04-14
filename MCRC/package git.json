@@ -18,7 +18,7 @@
     }],
     "grammars": [{
       "language": "mcrc",
-      "scopeName": "text.mcrc, source.mcrc",
+      "scopeName": "source.mcrc",
       "path": "./syntaxes git/mcrc.tmLanguage.json"
     }]
   }
