@@ -1,0 +1,25 @@
+{
+  "name": "mcrc",
+  "displayName": "MCRC",
+  "description": "# mcrc\nCLI for reading and writing `.mcrc` files.\n## Install\n```bash\npip install .",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.115.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "mcrc",
+      "aliases": ["MCRC", "mcrc"],
+      "extensions": [".mcrc",".mr",".mc"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "mcrc",
+      "scopeName": "text.mcrc, source.mcrc",
+      "path": "./syntaxes/mcrc.tmLanguage.json"
+    }]
+  }
+}
