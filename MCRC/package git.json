@@ -14,12 +14,12 @@
       "id": "mcrc",
       "aliases": ["MCRC", "mcrc"],
       "extensions": [".mcrc",".mr",".mc"],
-      "configuration": "./language-configuration git.json"
+      "configuration": "./language-configuration.json"
     }],
     "grammars": [{
       "language": "mcrc",
       "scopeName": "source.mcrc",
-      "path": "./syntaxes git/mcrc.tmLanguage.json"
+      "path": "./syntaxes/mcrc.tmLanguage.json"
     }]
   }
 }
