@@ -7,13 +7,13 @@
     
     {
       "name": "Python Debugger: Module",
-      "type": "run",
+      "type": "debugpy",
       "request": "launch",
       "module": "MCRC"
     },
     {
       "name": "Python Debugger: Python File",
-      "type": "run",
+      "type": "debugpy",
       "request": "launch",
       "program": "${file}"
     }
