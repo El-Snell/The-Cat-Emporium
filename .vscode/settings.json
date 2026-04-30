@@ -8,5 +8,7 @@
             "envManager": "ms-python.python:venv",
             "packageManager": "ms-python.python:pip"
         }
-    ]
+    ],
+    "chat.agent.enabled": false,
+    "chat.disableAIFeatures": true
 }
