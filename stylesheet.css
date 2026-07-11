@@ -134,6 +134,10 @@ section {
 section img {
 	width: 100%;
 }
+/*.images img {
+  width: 45%;
+  justify-content: center;
+}*/
 a {
 	text-decoration: none;
 }
@@ -286,11 +290,7 @@ li {
 .dev {
   display: none;
 }
-.dev li {
-  width: 20%;
-  padding-left: 10px;
-  padding-right: 10px;
-}
+
 #catGPT {
   position: fixed;
   bottom: 20px;

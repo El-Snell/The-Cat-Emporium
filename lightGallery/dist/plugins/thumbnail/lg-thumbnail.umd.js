@@ -42,7 +42,7 @@
         animateThumb: true,
         currentPagerPosition: 'middle',
         alignThumbnails: 'middle',
-        thumbWidth: 100,
+        thumbWidth: 30,
         thumbHeight: '80px',
         thumbMargin: 5,
         appendThumbnailsTo: '.lg-components',
