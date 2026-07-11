@@ -134,10 +134,10 @@ section {
 section img {
 	width: 100%;
 }
-/*.images img {
+.images img {
   width: 45%;
   justify-content: center;
-}*/
+}
 a {
 	text-decoration: none;
 }
