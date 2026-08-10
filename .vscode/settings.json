@@ -10,5 +10,8 @@
         }
     ],
     "chat.agent.enabled": false,
-    "chat.disableAIFeatures": true
+    "chat.disableAIFeatures": true,
+    "cSpell.words": [
+        "lightgallery"
+    ]
 }

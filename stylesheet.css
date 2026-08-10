@@ -282,11 +282,17 @@ ul {
 	padding-top: 7px;
   margin: 0px;
 } 
-li {
+.index li {
   width: 20%;
   padding-left: 10px;
   padding-right: 10px;
 } 
+.search li {
+  width: 25%;
+}
+.imgsearch img {
+  width: 15vw;
+}
 .dev {
   display: none;
 }
