@@ -289,6 +289,8 @@ ul {
 } 
 .search li {
   width: 25%;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 .imgsearch img {
   width: 15vw;
