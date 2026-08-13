@@ -8,3 +8,49 @@ const lightgallery = document.getElementById("lightgallery");
 function reload_page() {
   location.reload;
 }
+bean.addEventListener("change", () => {
+  reload_images();
+});
+bert.addEventListener("change", () => {
+  reload_images();
+});
+lucky.addEventListener("change", () => {
+  reload_images();
+});
+soji.addEventListener("change", () => {
+  reload_images();
+});
+function reload_images() {
+  lightgallery.replaceChildren();
+  let num_checked;
+  const checked = [];
+  if (bean.checked == true) {
+    num_checked ++;
+    checked.push(bean);
+  }
+  if (bert.checked == true) {
+    num_checked ++;
+    checked.push(bert);
+  }
+  if (lucky.checked == true) {
+    num_checked ++;
+    checked.push(lucky);
+  }
+  if (soji.checked == true) {
+    num_checked ++;
+    checked.push(soji);
+  }
+  const nums = [];
+  if (num_checked > 0) {
+    tags.checked[0]
+  const a = document.createElement("a");
+    a.href = `images/${num}.JPG`;
+
+    const img = document.createElement("img");
+    img.src = `images/${num}.JPG`;
+    img.alt = `img${num}`;
+
+    a.appendChild(img);
+    gallery.appendChild(a);
+  }
+}
