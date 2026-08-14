@@ -23,7 +23,7 @@ soji.addEventListener("change", () => {
 function reload_images() {
   console.log("reload_images called!");
   lightgallery.replaceChildren();
-  var num_checked;
+  var num_checked = 0;
   const checked = [];
   if (bean.checked == true) {
     num_checked ++;
