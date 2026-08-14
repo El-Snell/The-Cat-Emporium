@@ -23,7 +23,7 @@ soji.addEventListener("change", () => {
 function reload_images() {
   console.log("reload_images called!");
   lightgallery.replaceChildren();
-  let num_checked;
+  var num_checked;
   const checked = [];
   if (bean.checked == true) {
     num_checked ++;
@@ -42,10 +42,11 @@ function reload_images() {
     num_checked ++;
     checked.push(soji);
   }
+  console.log(num_checked);
   const nums = [];
   if (num_checked > 0) {
     console.log("forEach reached!");
-    tags.checked[0].array.forEach(num => {
+    tags.checked[0].forEach(num => {
       if (num_checked > 1) {
         tags.checked[1].forEach(num1 =>{
           if (num_checked > 2) {
