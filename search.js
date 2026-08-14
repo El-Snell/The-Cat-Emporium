@@ -21,6 +21,7 @@ soji.addEventListener("change", () => {
   reload_images();
 });
 function reload_images() {
+  console.log("reload_images called!");
   lightgallery.replaceChildren();
   let num_checked;
   const checked = [];
