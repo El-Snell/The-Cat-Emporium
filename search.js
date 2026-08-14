@@ -27,6 +27,7 @@ function reload_images() {
   const checked = [];
   if (bean.checked == true) {
     num_checked ++;
+    console.log("bean checked!");
     checked.push(bean);
   }
   if (bert.checked == true) {
@@ -43,35 +44,37 @@ function reload_images() {
   }
   const nums = [];
   if (num_checked > 0) {
+    console.log("forEach reached!");
     tags.checked[0].array.forEach(num => {
-    if (num_checked > 1) {
-      tags.checked[1].forEach(num1 =>{
-        if (num_checked > 2) {
-          tags.checked[2].forEach(num2 => {
-            if (num_checked > 3) {
-              tags.checked[3].forEach(num3 => {
-                if (num == num1 == num2 == num3) {
-                  nums.push(num3);
+      if (num_checked > 1) {
+        tags.checked[1].forEach(num1 =>{
+          if (num_checked > 2) {
+            tags.checked[2].forEach(num2 => {
+              if (num_checked > 3) {
+                tags.checked[3].forEach(num3 => {
+                  if (num == num1 == num2 == num3) {
+                    nums.push(num3);
+                  }
+
+                });
+              } else {
+                if (num == num1 == num2) {
+                  nums.push(num2);
                 }
-
-              });
-            } else {
-              if (num == num1 == num2) {
-                nums.push(num2);
               }
+            });
+          } else {
+            if (num == num1) {
+              nums.push(num1);
             }
-          });
-        } else {
-          if (num == num1) {
-            nums.push(num1);
           }
-        }
 
-      });
-    } else {
-      nums.push(num);
-    }
+        });
+      } else {
+        nums.push(num);
+      }
     });
+    console.log("images code reached!");
     nums.forEach(num => {
       const a = document.createElement("a");
       a.href = `images/${num}.JPG`;
