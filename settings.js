@@ -11,7 +11,7 @@ const dev = document.querySelector(".dev")
 
 // Reload page
 function reload_page() {
-  location.reload;
+  location.reload();
 }
 
 // Detect system dark mode

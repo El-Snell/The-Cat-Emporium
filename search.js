@@ -6,7 +6,7 @@ const lightgallery = document.getElementById("lightgallery");
 
 // Reload page
 function reload_page() {
-  location.reload;
+  location.reload();
 }
 bean.addEventListener("change", () => {
   reload_images();
@@ -20,7 +20,7 @@ lucky.addEventListener("change", () => {
 soji.addEventListener("change", () => {
   reload_images();
 });
-function reload_images() {
+/* function reload_images() {
   console.log("reload_images called!");
   lightgallery.replaceChildren();
   var num_checked = 0;
@@ -88,4 +88,39 @@ function reload_images() {
       lightgallery.appendChild(a);
     });
   }
+} */
+function reload_images() {
+  console.log("reload_images called!");
+  lightgallery.replaceChildren();
+
+  const checked = [];
+
+  if (bean.checked) checked.push(tags.bean);
+  if (bert.checked) checked.push(tags.bert);
+  if (lucky.checked) checked.push(tags.lucky);
+  if (soji.checked) checked.push(tags.soji);
+
+  console.log("Number checked:", checked.length);
+
+  if (checked.length === 0) {
+    return;
+  }
+
+  const nums = checked[0].filter(num =>
+    checked.every(tag => tag.includes(num))
+  );
+
+  console.log("Matching numbers:", nums);
+
+  nums.forEach(num => {
+    const a = document.createElement("a");
+    a.href = `images/${num}.JPG`;
+
+    const img = document.createElement("img");
+    img.src = `images/${num}.JPG`;
+    img.alt = `img${num}`;
+
+    a.appendChild(img);
+    lightgallery.appendChild(a);
+  });
 }
