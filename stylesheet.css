@@ -301,7 +301,9 @@ li {
   display: flex;
 }
 .imgsearch img {
-  width: 15vw;
+  width: 15vw !important;
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
 .dev {
   display: none;
