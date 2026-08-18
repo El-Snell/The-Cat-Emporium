@@ -287,10 +287,18 @@ li {
   padding-left: 10px;
   padding-right: 10px;
 } 
+.search {
+  display: flex;
+  justify-content: center;
+}
 .search li {
   width: 25%;
   padding-left: 0px;
   padding-right: 0px;
+}
+.imgsearch {
+  justify-content: center;
+  display: flex;
 }
 .imgsearch img {
   width: 15vw;
