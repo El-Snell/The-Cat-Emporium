@@ -3,45 +3,141 @@ const legoStage = document.getElementById("lego-stage");
 
 let legoRunning = false;
 
-
-/* =========================================
-   TOGGLE
-   ========================================= */
-
 legoToggle.addEventListener("change", () => {
-
-    if (!legoToggle.checked || legoRunning)
-        return;
+    if (!legoToggle.checked || legoRunning) return;
 
     legoRunning = true;
-
     doLego();
-
 });
 
-
-/* =========================================
-   MAIN ANIMATION
-   ========================================= */
 
 async function doLego() {
 
     await new Promise(requestAnimationFrame);
 
+    /*
+     * Temporarily hide the settings menu.
+     */
+    const menu = document.getElementById("settingsMenu");
+
+    if (menu) {
+        menu.style.visibility = "hidden";
+    }
+
 
     /*
-     * Temporarily hide settings menu from
-     * the page snapshot.
+     * ==========================================
+     * FIX SVG <object>
+     * ==========================================
+     *
+     * html2canvas doesn't reliably render an
+     * external SVG inside <object>.
+     *
+     * We temporarily replace it with the actual
+     * SVG contents while taking the screenshot.
      */
-    const menu =
-        document.getElementById("settingsMenu");
 
-    if (menu)
-        menu.style.visibility = "hidden";
+    const bannerObject = document.querySelector(
+        ".svgbanner object[type='image/svg+xml']"
+    );
 
+    let originalBannerHTML = null;
+    let inlineBanner = null;
+
+    if (bannerObject) {
+
+        try {
+
+            const svgURL = bannerObject.data;
+
+            const response = await fetch(svgURL);
+
+            if (!response.ok) {
+                throw new Error(
+                    `Could not load ${svgURL}`
+                );
+            }
+
+            const svgText = await response.text();
+
+
+            /*
+             * Save original object.
+             */
+            originalBannerHTML =
+                bannerObject.outerHTML;
+
+
+            /*
+             * Parse SVG.
+             */
+            const parser = new DOMParser();
+
+            const svgDocument =
+                parser.parseFromString(
+                    svgText,
+                    "image/svg+xml"
+                );
+
+
+            inlineBanner =
+                svgDocument.documentElement;
+
+
+            /*
+             * Make it behave like the
+             * original <object>.
+             */
+            inlineBanner.style.width = "100%";
+            inlineBanner.style.height = "100%";
+            inlineBanner.style.display = "block";
+
+
+            /*
+             * Preserve the SVG's viewBox.
+             */
+            if (!inlineBanner.hasAttribute("preserveAspectRatio")) {
+                inlineBanner.setAttribute(
+                    "preserveAspectRatio",
+                    "xMidYMid meet"
+                );
+            }
+
+
+            /*
+             * Replace object with inline SVG.
+             */
+            bannerObject.replaceWith(
+                inlineBanner
+            );
+
+
+            /*
+             * Allow browser to render it.
+             */
+            await new Promise(
+                requestAnimationFrame
+            );
+
+        } catch (error) {
+
+            console.warn(
+                "LEGO: Could not inline banner SVG:",
+                error
+            );
+
+            inlineBanner = null;
+        }
+    }
+
+
+    /*
+     * ==========================================
+     * TAKE PAGE SNAPSHOT
+     * ==========================================
+     */
 
     let canvas;
-
 
     try {
 
@@ -72,12 +168,21 @@ async function doLego() {
     } catch (error) {
 
         console.error(
-            "LEGO animation failed:",
+            "LEGO: html2canvas failed:",
             error
         );
 
-        if (menu)
+        /*
+         * Restore SVG.
+         */
+        restoreBanner(
+            inlineBanner,
+            originalBannerHTML
+        );
+
+        if (menu) {
             menu.style.visibility = "";
+        }
 
         legoToggle.checked = false;
         legoRunning = false;
@@ -86,21 +191,41 @@ async function doLego() {
     }
 
 
-    if (menu)
+    /*
+     * ==========================================
+     * RESTORE SVG
+     * ==========================================
+     */
+
+    restoreBanner(
+        inlineBanner,
+        originalBannerHTML
+    );
+
+
+    /*
+     * Restore settings menu.
+     */
+    if (menu) {
         menu.style.visibility = "";
+    }
 
 
+    /*
+     * Convert screenshot to image.
+     */
     const pageImage =
         canvas.toDataURL("image/png");
 
 
     /*
-     * Start clean.
+     * ==========================================
+     * START LEGO STAGE
+     * ==========================================
      */
-    legoStage.innerHTML = "";
 
-    legoStage.className =
-        "lego-active";
+    legoStage.innerHTML = "";
+    legoStage.className = "lego-active";
 
 
     /*
@@ -112,25 +237,20 @@ async function doLego() {
 
 
     /*
-     * LEGO dimensions.
+     * ==========================================
+     * CREATE LEGO PIECES
+     * ==========================================
      */
+
     const PIECE_W = 50;
     const PIECE_H = 25;
 
-
-    const screenW =
-        window.innerWidth;
-
-    const screenH =
-        window.innerHeight;
-
+    const screenW = window.innerWidth;
+    const screenH = window.innerHeight;
 
     const pieces = [];
 
 
-    /*
-     * Create page pieces.
-     */
     for (
         let y = 0;
         y < screenH;
@@ -143,13 +263,13 @@ async function doLego() {
             x += PIECE_W
         ) {
 
-            const w =
+            const width =
                 Math.min(
                     PIECE_W,
                     screenW - x
                 );
 
-            const h =
+            const height =
                 Math.min(
                     PIECE_H,
                     screenH - y
@@ -164,6 +284,9 @@ async function doLego() {
                 "lego-piece";
 
 
+            /*
+             * Exact final position.
+             */
             piece.style.left =
                 `${x}px`;
 
@@ -171,14 +294,15 @@ async function doLego() {
                 `${y}px`;
 
             piece.style.width =
-                `${w}px`;
+                `${width}px`;
 
             piece.style.height =
-                `${h}px`;
+                `${height}px`;
 
 
             /*
-             * Exact section of the page.
+             * Give the piece its exact section
+             * of the page screenshot.
              */
             piece.style.backgroundImage =
                 `url("${pageImage}")`;
@@ -191,11 +315,14 @@ async function doLego() {
 
 
             /*
-             * Explosion.
+             * ==================================
+             * EXPLOSION
+             * ==================================
              */
+
             piece.style.setProperty(
                 "--explode-x",
-                `${(Math.random() - .5) * 1000}px`
+                `${(Math.random() - 0.5) * 1000}px`
             );
 
             piece.style.setProperty(
@@ -205,16 +332,19 @@ async function doLego() {
 
             piece.style.setProperty(
                 "--explode-r",
-                `${(Math.random() - .5) * 1000}deg`
+                `${(Math.random() - 0.5) * 1000}deg`
             );
 
 
             /*
-             * Falling from sky.
+             * ==================================
+             * FALL FROM SKY
+             * ==================================
              */
+
             piece.style.setProperty(
                 "--sky-x",
-                `${(Math.random() - .5) * 1100}px`
+                `${(Math.random() - 0.5) * 1100}px`
             );
 
             piece.style.setProperty(
@@ -224,31 +354,30 @@ async function doLego() {
 
             piece.style.setProperty(
                 "--sky-r",
-                `${(Math.random() - .5) * 900}deg`
+                `${(Math.random() - 0.5) * 900}deg`
             );
 
 
             /*
-             * Stagger the reconstruction.
+             * ==================================
+             * BUILD ORDER
+             * ==================================
              *
-             * Top pieces arrive first, then
-             * progressively lower pieces.
+             * Pieces reconstruct from top to
+             * bottom in slightly staggered waves.
              */
+
             const row =
                 Math.floor(y / PIECE_H);
 
-            const col =
-                Math.floor(x / PIECE_W);
-
-
-            const wave =
-                row * .018 +
-                Math.random() * .25;
+            const delay =
+                row * 0.018 +
+                Math.random() * 0.25;
 
 
             piece.style.setProperty(
                 "--delay",
-                `${wave}s`
+                `${delay}s`
             );
 
 
@@ -263,9 +392,9 @@ async function doLego() {
 
 
     /*
-     * =====================================
-     * PAGE EXPLODES
-     * =====================================
+     * ==========================================
+     * 1. PAGE FALLS APART
+     * ==========================================
      */
 
     pieces.forEach(piece => {
@@ -278,9 +407,9 @@ async function doLego() {
 
 
     /*
-     * =====================================
-     * WHITE
-     * =====================================
+     * ==========================================
+     * 2. WHITE FLASH
+     * ==========================================
      */
 
     await sleep(1100);
@@ -291,9 +420,9 @@ async function doLego() {
 
 
     /*
-     * =====================================
-     * FALLING LEGO
-     * =====================================
+     * ==========================================
+     * 3. LEGOS FALL FROM SKY
+     * ==========================================
      */
 
     await sleep(550);
@@ -310,7 +439,7 @@ async function doLego() {
         );
 
         /*
-         * Force animation reset.
+         * Force animation restart.
          */
         void piece.offsetWidth;
 
@@ -322,27 +451,27 @@ async function doLego() {
 
 
     /*
-     * =====================================
-     * CLICKING / LOCKING SOUNDS
-     * =====================================
+     * ==========================================
+     * 4. LEGO CLICK SOUNDS
+     * ==========================================
      */
 
     playLegoSounds();
 
 
     /*
-     * =====================================
-     * WAIT FOR FINAL PIECES
-     * =====================================
+     * ==========================================
+     * 5. WAIT FOR CONSTRUCTION
+     * ==========================================
      */
 
     await sleep(3500);
 
 
     /*
-     * =====================================
-     * REVEAL REAL PAGE
-     * =====================================
+     * ==========================================
+     * 6. REVEAL ACTUAL PAGE
+     * ==========================================
      */
 
     document.body.classList.remove(
@@ -351,9 +480,7 @@ async function doLego() {
 
 
     legoStage.className = "";
-
     legoStage.innerHTML = "";
-
 
     legoToggle.checked = false;
 
@@ -361,23 +488,42 @@ async function doLego() {
 }
 
 
-/* =========================================
-   LEGO SOUND
-   ========================================= */
+/*
+ * ==========================================
+ * RESTORE SVG OBJECT
+ * ==========================================
+ */
+
+function restoreBanner(
+    inlineBanner,
+    originalBannerHTML
+) {
+
+    if (
+        inlineBanner &&
+        originalBannerHTML
+    ) {
+
+        inlineBanner.outerHTML =
+            originalBannerHTML;
+    }
+}
+
+
+/*
+ * ==========================================
+ * LEGO SOUND EFFECTS
+ * ==========================================
+ */
 
 function playLegoSounds() {
 
-    /*
-     * Web Audio API.
-     *
-     * No external audio files required.
-     */
     const AudioContext =
         window.AudioContext ||
         window.webkitAudioContext;
 
-    if (!AudioContext)
-        return;
+
+    if (!AudioContext) return;
 
 
     const audio =
@@ -385,12 +531,16 @@ function playLegoSounds() {
 
 
     /*
-     * Several little plastic clicks.
+     * Small plastic clicks as pieces land.
      */
-    const clicks = 18;
+    const clicks = 20;
 
 
-    for (let i = 0; i < clicks; i++) {
+    for (
+        let i = 0;
+        i < clicks;
+        i++
+    ) {
 
         setTimeout(() => {
 
@@ -407,7 +557,7 @@ function playLegoSounds() {
 
             oscillator.frequency.value =
                 170 +
-                Math.random() * 100;
+                Math.random() * 120;
 
 
             gain.gain.setValueAtTime(
@@ -418,46 +568,53 @@ function playLegoSounds() {
 
             gain.gain.exponentialRampToValueAtTime(
                 0.045,
-                audio.currentTime + .005
+                audio.currentTime + 0.005
             );
 
 
             gain.gain.exponentialRampToValueAtTime(
                 0.0001,
-                audio.currentTime + .055
+                audio.currentTime + 0.055
             );
 
 
             oscillator.connect(gain);
 
-            gain.connect(audio.destination);
+            gain.connect(
+                audio.destination
+            );
 
 
             oscillator.start();
 
             oscillator.stop(
-                audio.currentTime + .06
+                audio.currentTime + 0.06
             );
 
         }, 1700 + i * 80);
     }
 
 
-    /*
-     * Close audio context after the effect.
-     */
     setTimeout(() => {
+
         audio.close();
+
     }, 4000);
 }
 
 
-/* =========================================
-   UTILITY
-   ========================================= */
+/*
+ * ==========================================
+ * UTILITY
+ * ==========================================
+ */
 
 function sleep(ms) {
+
     return new Promise(
-        resolve => setTimeout(resolve, ms)
+        resolve => setTimeout(
+            resolve,
+            ms
+        )
     );
 }
