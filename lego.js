@@ -1,67 +1,199 @@
-const legoToggle = document.getElementById("lego");
-const legoOverlay = document.getElementById("lego-overlay");
+const legoCheckbox = document.getElementById("lego");
+const legoTransition = document.getElementById("lego-transition");
+const legoWhite = document.getElementById("lego-white");
 
-legoToggle.addEventListener("change", () => {
-  if (!legoToggle.checked) return;
+let legoRunning = false;
 
-  // Clear previous pieces
-  legoOverlay.innerHTML = "";
+legoCheckbox.addEventListener("change", async () => {
 
-  // Create a bunch of LEGO pieces
-  const pieces = 80;
+  if (!legoCheckbox.checked || legoRunning) return;
 
-  for (let i = 0; i < pieces; i++) {
-    const lego = document.createElement("div");
-    lego.className = "lego-piece";
+  legoRunning = true;
 
-    // Spread them across the page
-    lego.style.left = `${Math.random() * 100}%`;
+  /*
+   * Hide the actual page only after we have
+   * represented it with LEGO pieces.
+   */
+  const page = document.body;
 
-    // Different brick sizes
-    const width = 45 + Math.random() * 70;
-    lego.style.width = `${width}px`;
+  const width = window.innerWidth;
+  const height = window.innerHeight;
 
-    // Random landing height
-    lego.style.setProperty(
-      "--bottom",
-      `${Math.random() * 85}%`
-    );
+  legoTransition.innerHTML = "";
 
-    // Random rotation while falling
-    lego.style.setProperty(
-      "--rotation",
-      `${-360 + Math.random() * 720}deg`
-    );
+  /*
+   * LEGO grid.
+   *
+   * Smaller pieces = more detailed reconstruction.
+   */
+  const pieceWidth = 55;
+  const pieceHeight = 28;
 
-    // Different LEGO colors
-    const colors = [
-      "#e30613",
-      "#0057b8",
-      "#ffd500",
-      "#00a650",
-      "#ff6f00",
-      "#ffffff"
-    ];
+  const cols = Math.ceil(width / pieceWidth);
+  const rows = Math.ceil(height / pieceHeight);
 
-    lego.style.background =
-      colors[Math.floor(Math.random() * colors.length)];
+  /*
+   * Capture the current page.
+   *
+   * This requires html2canvas.
+   */
+  const canvas = await html2canvas(document.body, {
+    backgroundColor: null,
+    scale: 1
+  });
 
-    // Stagger the rain
-    lego.style.animationDelay =
-      `${Math.random() * 1.2}s`;
+  const image = canvas.toDataURL();
 
-    legoOverlay.appendChild(lego);
+  /*
+   * Hide the actual page.
+   */
+  page.style.visibility = "hidden";
+
+  legoTransition.style.opacity = "1";
+
+  /*
+   * Create LEGO pieces representing the page.
+   */
+  for (let row = 0; row < rows; row++) {
+
+    for (let col = 0; col < cols; col++) {
+
+      const tile = document.createElement("div");
+
+      tile.className = "lego-tile";
+
+      const x = col * pieceWidth;
+      const y = row * pieceHeight;
+
+      tile.style.width = `${pieceWidth}px`;
+      tile.style.height = `${pieceHeight}px`;
+
+      tile.style.left = `${x}px`;
+      tile.style.top = `${y}px`;
+
+      /*
+       * Each LEGO contains the corresponding
+       * section of the original page.
+       */
+      tile.style.backgroundImage = `url(${image})`;
+
+      tile.style.backgroundSize =
+        `${width}px ${height}px`;
+
+      tile.style.backgroundPosition =
+        `-${x}px -${y}px`;
+
+      /*
+       * Random destruction trajectory.
+       */
+      tile.style.setProperty(
+        "--x1",
+        `${(Math.random() - .5) * 120}px`
+      );
+
+      tile.style.setProperty(
+        "--y1",
+        `${-40 + Math.random() * 120}px`
+      );
+
+      tile.style.setProperty(
+        "--r1",
+        `${(Math.random() - .5) * 30}deg`
+      );
+
+      tile.style.setProperty(
+        "--x2",
+        `${(Math.random() - .5) * 900}px`
+      );
+
+      tile.style.setProperty(
+        "--y2",
+        `${100 + Math.random() * 700}px`
+      );
+
+      tile.style.setProperty(
+        "--r2",
+        `${(Math.random() - .5) * 720}deg`
+      );
+
+      legoTransition.appendChild(tile);
+    }
   }
 
-  legoOverlay.classList.remove("active");
+  /*
+   * LET THE PAGE FALL APART.
+   */
+  await new Promise(resolve => setTimeout(resolve, 1450));
 
-  // Force animation restart
-  void legoOverlay.offsetWidth;
 
-  legoOverlay.classList.add("active");
+  /*
+   * WHITE FLASH
+   */
+  legoWhite.classList.add("flash");
 
-  // Reset checkbox after animation
-  setTimeout(() => {
-    legoToggle.checked = false;
-  }, 4000);
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  legoWhite.classList.remove("flash");
+
+
+  /*
+   * Reset the pieces so they're coming
+   * from above instead.
+   */
+  const pieces =
+    [...legoTransition.querySelectorAll(".lego-tile")];
+
+  pieces.forEach(piece => {
+
+    piece.style.setProperty(
+      "--fall-x",
+      `${(Math.random() - .5) * 1000}px`
+    );
+
+    piece.style.setProperty(
+      "--fall-y",
+      `${-window.innerHeight - Math.random() * 500}px`
+    );
+
+    piece.style.setProperty(
+      "--fall-r",
+      `${(Math.random() - .5) * 720}deg`
+    );
+
+    /*
+     * Stagger the falling pieces.
+     */
+    piece.style.setProperty(
+      "--delay",
+      `${Math.random() * 1.2}s`
+    );
+  });
+
+
+  /*
+   * REBUILD THE PAGE.
+   */
+  legoTransition.classList.add("rebuild");
+
+
+  /*
+   * Wait until everything has locked together.
+   */
+  await new Promise(resolve => setTimeout(resolve, 3200));
+
+
+  /*
+   * Reveal the actual page.
+   */
+  page.style.visibility = "";
+
+  legoTransition.style.opacity = "0";
+
+  legoTransition.classList.remove("rebuild");
+
+  legoTransition.innerHTML = "";
+
+  legoRunning = false;
+
+  legoCheckbox.checked = false;
 });
