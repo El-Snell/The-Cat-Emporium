@@ -1,226 +1,297 @@
 const legoToggle = document.getElementById("lego");
 const legoStage = document.getElementById("lego-stage");
 
-let legoAnimating = false;
+let legoRunning = false;
 
-legoToggle.addEventListener("change", () => {
-  if (!legoToggle.checked || legoAnimating) return;
+legoToggle.addEventListener("change", async () => {
 
-  legoAnimating = true;
-  runLegoAnimation();
+    if (!legoToggle.checked || legoRunning) return;
+
+    legoRunning = true;
+
+    try {
+        await legoPage();
+    } catch (error) {
+        console.error("LEGO animation failed:", error);
+
+        document.documentElement.style.visibility = "";
+        legoStage.className = "";
+        legoStage.innerHTML = "";
+    }
+
+    legoToggle.checked = false;
+    legoRunning = false;
 });
 
 
-function runLegoAnimation() {
-
-  legoStage.innerHTML = "";
-  legoStage.classList.add("active");
-
-  /*
-   * Elements we want to turn into LEGO pieces.
-   *
-   * Add/remove selectors here depending on your page.
-   */
-  const targets = document.querySelectorAll(`
-    header,
-    nav,
-    main,
-    section,
-    article,
-    aside,
-    footer,
-    button,
-    a,
-    img,
-    h1,
-    h2,
-    h3,
-    p,
-    li
-  `);
-
-  const clones = [];
-
-  /*
-   * Create a clone of every visible element.
-   */
-  targets.forEach(element => {
-
-    const rect = element.getBoundingClientRect();
-
-    if (
-      rect.width === 0 ||
-      rect.height === 0 ||
-      getComputedStyle(element).display === "none"
-    ) {
-      return;
-    }
+async function legoPage() {
 
     /*
-     * Don't clone elements inside other cloned elements.
-     *
-     * Otherwise a button inside a section would
-     * get cloned twice.
+     * Make sure the browser has finished
+     * rendering before taking the snapshot.
      */
-    if (
-      [...element.parentElement?.querySelectorAll(
-        "header, nav, main, section, article, aside, footer, button, a, img, h1, h2, h3, p, li"
-      ) || []].some(child =>
-        child !== element &&
-        element.contains(child)
-      )
-    ) {
-      return;
-    }
+    await new Promise(requestAnimationFrame);
 
-    const clone = element.cloneNode(true);
-
-    clone.classList.add("lego-clone");
 
     /*
-     * Put clone at exact original position.
+     * Capture the ENTIRE visible page.
      */
-    clone.style.left = `${rect.left}px`;
-    clone.style.top = `${rect.top}px`;
-    clone.style.width = `${rect.width}px`;
-    clone.style.height = `${rect.height}px`;
+    const canvas = await html2canvas(document.documentElement, {
 
-    /*
-     * Give it a fixed position so it doesn't move
-     * when the actual page changes.
-     */
-    clone.style.position = "fixed";
+        backgroundColor: null,
 
-    /*
-     * Random destruction trajectory.
-     */
-    clone.style.setProperty(
-      "--burst-x",
-      `${(Math.random() - .5) * 100}px`
-    );
+        width: window.innerWidth,
+        height: window.innerHeight,
 
-    clone.style.setProperty(
-      "--burst-y",
-      `${(Math.random() - .5) * 100}px`
-    );
+        windowWidth: window.innerWidth,
+        windowHeight: window.innerHeight,
 
-    clone.style.setProperty(
-      "--burst-r",
-      `${(Math.random() - .5) * 40}deg`
-    );
+        scrollX: window.scrollX,
+        scrollY: window.scrollY,
 
-    clone.style.setProperty(
-      "--explode-x",
-      `${(Math.random() - .5) * 900}px`
-    );
+        scale: Math.min(window.devicePixelRatio || 1, 2),
 
-    clone.style.setProperty(
-      "--explode-y",
-      `${100 + Math.random() * 700}px`
-    );
+        useCORS: true,
 
-    clone.style.setProperty(
-      "--explode-r",
-      `${(Math.random() - .5) * 720}deg`
-    );
-
-    /*
-     * Where the piece comes from during reconstruction.
-     */
-    clone.style.setProperty(
-      "--start-x",
-      `${(Math.random() - .5) * 1200}px`
-    );
-
-    clone.style.setProperty(
-      "--start-y",
-      `${-window.innerHeight - Math.random() * 500}px`
-    );
-
-    clone.style.setProperty(
-      "--start-r",
-      `${(Math.random() - .5) * 720}deg`
-    );
-
-    clone.style.setProperty(
-      "--build-delay",
-      `${Math.random() * 1.2}s`
-    );
-
-    legoStage.appendChild(clone);
-
-    clones.push(clone);
-  });
-
-
-  /*
-   * Hide the real page AFTER clones exist.
-   */
-  document.body.style.visibility = "hidden";
-
-
-  /*
-   * PHASE 1:
-   * Page breaks apart.
-   */
-  requestAnimationFrame(() => {
-
-    clones.forEach(clone => {
-      clone.classList.add("breaking");
+        logging: false
     });
 
-  });
 
+    /*
+     * The page is now safely captured.
+     */
 
-  /*
-   * PHASE 2:
-   * White screen.
-   */
-  setTimeout(() => {
+    const pageImage = canvas.toDataURL("image/png");
 
-    legoStage.classList.add("flash");
-
-  }, 1150);
-
-
-  /*
-   * PHASE 3:
-   * LEGO pieces fall from sky and rebuild.
-   */
-  setTimeout(() => {
-
-    clones.forEach(clone => {
-
-      clone.classList.remove("breaking");
-
-      /*
-       * Force animation restart.
-       */
-      void clone.offsetWidth;
-
-      clone.classList.add("building");
-
-    });
-
-  }, 1500);
-
-
-  /*
-   * PHASE 4:
-   * Reveal actual page.
-   */
-  setTimeout(() => {
-
-    document.body.style.visibility = "";
-
-    legoStage.classList.remove("flash");
-    legoStage.classList.remove("active");
 
     legoStage.innerHTML = "";
+    legoStage.className = "active";
 
-    legoToggle.checked = false;
 
-    legoAnimating = false;
+    /*
+     * Hide the REAL page.
+     *
+     * The LEGO pieces now represent it.
+     */
+    document.documentElement.style.visibility = "hidden";
 
-  }, 4200);
+
+    /*
+     * LEGO dimensions.
+     */
+    const pieceWidth = 48;
+    const pieceHeight = 24;
+
+
+    const cols =
+        Math.ceil(window.innerWidth / pieceWidth);
+
+    const rows =
+        Math.ceil(window.innerHeight / pieceHeight);
+
+
+    const pieces = [];
+
+
+    /*
+     * Create the page out of pieces.
+     */
+    for (let row = 0; row < rows; row++) {
+
+        for (let col = 0; col < cols; col++) {
+
+            const x = col * pieceWidth;
+            const y = row * pieceHeight;
+
+            const width =
+                Math.min(
+                    pieceWidth,
+                    window.innerWidth - x
+                );
+
+            const height =
+                Math.min(
+                    pieceHeight,
+                    window.innerHeight - y
+                );
+
+
+            const piece =
+                document.createElement("div");
+
+            piece.className = "lego-piece";
+
+
+            /*
+             * Exact position.
+             */
+            piece.style.left = `${x}px`;
+            piece.style.top = `${y}px`;
+
+            piece.style.width = `${width}px`;
+            piece.style.height = `${height}px`;
+
+
+            /*
+             * The piece contains the exact
+             * corresponding section of the page.
+             */
+            piece.style.backgroundImage =
+                `url("${pageImage}")`;
+
+            piece.style.backgroundSize =
+                `${window.innerWidth}px ${window.innerHeight}px`;
+
+            piece.style.backgroundPosition =
+                `-${x}px -${y}px`;
+
+
+            /*
+             * Slight random kick.
+             */
+            piece.style.setProperty(
+                "--kick-x",
+                `${(Math.random() - .5) * 50}px`
+            );
+
+            piece.style.setProperty(
+                "--kick-y",
+                `${(Math.random() - .5) * 50}px`
+            );
+
+            piece.style.setProperty(
+                "--kick-r",
+                `${(Math.random() - .5) * 20}deg`
+            );
+
+
+            /*
+             * Where the piece flies during destruction.
+             */
+            piece.style.setProperty(
+                "--explode-x",
+                `${(Math.random() - .5) * 1100}px`
+            );
+
+            piece.style.setProperty(
+                "--explode-y",
+                `${100 + Math.random() * 800}px`
+            );
+
+            piece.style.setProperty(
+                "--explode-r",
+                `${(Math.random() - .5) * 1000}deg`
+            );
+
+
+            /*
+             * Where the piece comes from
+             * during reconstruction.
+             */
+            piece.style.setProperty(
+                "--sky-x",
+                `${(Math.random() - .5) * 1000}px`
+            );
+
+            piece.style.setProperty(
+                "--sky-y",
+                `${-window.innerHeight - Math.random() * 500}px`
+            );
+
+            piece.style.setProperty(
+                "--sky-r",
+                `${(Math.random() - .5) * 900}deg`
+            );
+
+
+            /*
+             * Randomized falling timing.
+             */
+            piece.style.setProperty(
+                "--delay",
+                `${Math.random() * .9}s`
+            );
+
+
+            legoStage.appendChild(piece);
+
+            pieces.push(piece);
+        }
+    }
+
+
+    /*
+     * ================================
+     * 1. PAGE DISINTEGRATES
+     * ================================
+     */
+
+    await new Promise(requestAnimationFrame);
+
+    pieces.forEach(piece => {
+        piece.classList.add("break");
+    });
+
+
+    /*
+     * ================================
+     * 2. WHITE
+     * ================================
+     */
+
+    await sleep(1050);
+
+    legoStage.classList.add("white");
+
+
+    /*
+     * ================================
+     * 3. LEGO FALLS FROM SKY
+     * ================================
+     */
+
+    await sleep(550);
+
+    legoStage.classList.remove("white");
+
+
+    pieces.forEach(piece => {
+
+        piece.classList.remove("break");
+
+        /*
+         * Force animation restart.
+         */
+        void piece.offsetWidth;
+
+        piece.classList.add("build");
+
+    });
+
+
+    /*
+     * ================================
+     * 4. LEGO FINISHES
+     * ================================
+     */
+
+    await sleep(3000);
+
+
+    /*
+     * ================================
+     * 5. REVEAL REAL PAGE
+     * ================================
+     */
+
+    document.documentElement.style.visibility = "";
+
+    legoStage.className = "";
+
+    legoStage.innerHTML = "";
+}
+
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

@@ -1,113 +1,185 @@
 #lego-stage {
-  position: fixed;
-  inset: 0;
-  z-index: 999999;
-  pointer-events: none;
-  overflow: hidden;
-  display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    pointer-events: none;
+    overflow: hidden;
+    display: none;
+    background: white;
 }
 
 #lego-stage.active {
-  display: block;
+    display: block;
 }
 
-/* The page clone */
-.lego-clone {
-  position: fixed !important;
-  margin: 0 !important;
-  pointer-events: none !important;
-  transform-origin: center center;
-  will-change: transform, opacity;
+/* Every fragment of the page */
+.lego-piece {
+    position: absolute;
+    box-sizing: border-box;
+
+    background-repeat: no-repeat;
+
+    will-change: transform, opacity;
+
+    border-radius: 2px;
+
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.25),
+        inset 0 -2px rgba(0,0,0,.15),
+        0 2px 5px rgba(0,0,0,.12);
 }
 
-/* Falling apart */
-.lego-clone.breaking {
-  animation:
-    legoBreak 1.2s cubic-bezier(.55,.05,.75,.2) forwards;
+/* Tiny LEGO stud */
+.lego-piece::after {
+    content: "";
+
+    position: absolute;
+
+    width: 6px;
+    height: 6px;
+
+    top: -3px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.18);
+
+    box-shadow:
+        inset 0 -1px rgba(0,0,0,.2);
 }
 
-@keyframes legoBreak {
-  0% {
-    transform:
-      translate3d(0,0,0)
-      rotate(0deg)
-      scale(1);
-    opacity: 1;
-  }
 
-  30% {
-    transform:
-      translate3d(var(--burst-x), var(--burst-y), 0)
-      rotate(var(--burst-r))
-      scale(1.05);
-    opacity: 1;
-  }
+/* =========================
+   PAGE FALLS APART
+   ========================= */
 
-  100% {
-    transform:
-      translate3d(var(--explode-x), var(--explode-y), 0)
-      rotate(var(--explode-r))
-      scale(.65);
+.lego-piece.break {
+    animation:
+        lego-explode 1.25s cubic-bezier(.5,0,.8,.2) forwards;
+}
+
+@keyframes lego-explode {
+
+    0% {
+        opacity: 1;
+        transform:
+            translate3d(0,0,0)
+            rotate(0deg)
+            scale(1);
+    }
+
+    20% {
+        opacity: 1;
+        transform:
+            translate3d(
+                var(--kick-x),
+                var(--kick-y),
+                0
+            )
+            rotate(var(--kick-r))
+            scale(1.05);
+    }
+
+    100% {
+        opacity: 0;
+        transform:
+            translate3d(
+                var(--explode-x),
+                var(--explode-y),
+                0
+            )
+            rotate(var(--explode-r))
+            scale(.65);
+    }
+}
+
+
+/* =========================
+   LEGO FALLS FROM SKY
+   ========================= */
+
+.lego-piece.build {
     opacity: 0;
-  }
+
+    animation:
+        lego-build 1.9s cubic-bezier(.12,.8,.18,1)
+        forwards;
+
+    animation-delay: var(--delay);
 }
 
-/* Rebuilding */
-.lego-clone.building {
-  opacity: 0;
+@keyframes lego-build {
 
-  animation:
-    legoBuild 1.8s cubic-bezier(.16,1,.3,1)
-    forwards;
+    0% {
+        opacity: 0;
 
-  animation-delay: var(--build-delay);
+        transform:
+            translate3d(
+                var(--sky-x),
+                var(--sky-y),
+                0
+            )
+            rotate(var(--sky-r))
+            scale(.65);
+    }
+
+    35% {
+        opacity: 1;
+    }
+
+    75% {
+        transform:
+            translate3d(
+                0,
+                8px,
+                0
+            )
+            rotate(0deg)
+            scale(1.02);
+    }
+
+    100% {
+        opacity: 1;
+
+        transform:
+            translate3d(0,0,0)
+            rotate(0deg)
+            scale(1);
+    }
 }
 
-@keyframes legoBuild {
-  0% {
-    opacity: 0;
 
-    transform:
-      translate3d(
-        var(--start-x),
-        var(--start-y),
-        0
-      )
-      rotate(var(--start-r))
-      scale(.65);
-  }
+/* =========================
+   WHITE FLASH
+   ========================= */
 
-  40% {
-    opacity: 1;
-  }
+#lego-stage.white::before {
+    content: "";
 
-  100% {
-    opacity: 1;
+    position: absolute;
+    inset: 0;
 
-    transform:
-      translate3d(0,0,0)
-      rotate(0deg)
-      scale(1);
-  }
+    z-index: 1000000;
+
+    background: white;
+
+    animation: white-flash .65s ease forwards;
 }
 
-/* White flash */
-#lego-stage::after {
-  content: "";
-  position: absolute;
-  inset: 0;
+@keyframes white-flash {
 
-  background: white;
+    0% {
+        opacity: 0;
+    }
 
-  opacity: 0;
-}
+    35% {
+        opacity: 1;
+    }
 
-#lego-stage.flash::after {
-  animation: legoWhite .5s ease forwards;
-}
-
-@keyframes legoWhite {
-  0% { opacity: 0; }
-  45% { opacity: 1; }
-  100% { opacity: 0; }
+    100% {
+        opacity: 0;
+    }
 }
