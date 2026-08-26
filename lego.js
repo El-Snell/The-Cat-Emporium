@@ -3,117 +3,137 @@ const legoStage = document.getElementById("lego-stage");
 
 let legoRunning = false;
 
-legoToggle.addEventListener("change", async () => {
-
+legoToggle.addEventListener("change", () => {
     if (!legoToggle.checked || legoRunning) return;
 
     legoRunning = true;
-
-    try {
-        await legoPage();
-    } catch (error) {
-        console.error("LEGO animation failed:", error);
-
-        document.documentElement.style.visibility = "";
-        legoStage.className = "";
-        legoStage.innerHTML = "";
-    }
-
-    legoToggle.checked = false;
-    legoRunning = false;
+    doLego();
 });
 
 
-async function legoPage() {
+async function doLego() {
 
     /*
-     * Make sure the browser has finished
-     * rendering before taking the snapshot.
+     * Make sure the page is completely rendered.
      */
     await new Promise(requestAnimationFrame);
 
 
     /*
-     * Capture the ENTIRE visible page.
+     * Take a picture of the CURRENT PAGE.
+     *
+     * We temporarily close the settings menu so it
+     * doesn't become part of the LEGO reconstruction.
      */
-    const canvas = await html2canvas(document.documentElement, {
+    const menu = document.getElementById("settingsMenu");
 
-        backgroundColor: null,
+    const wasOpen =
+        menu &&
+        getComputedStyle(menu).display !== "none";
 
-        width: window.innerWidth,
-        height: window.innerHeight,
+    if (menu) {
+        menu.style.visibility = "hidden";
+    }
 
-        windowWidth: window.innerWidth,
-        windowHeight: window.innerHeight,
 
-        scrollX: window.scrollX,
-        scrollY: window.scrollY,
+    let canvas;
 
-        scale: Math.min(window.devicePixelRatio || 1, 2),
+    try {
 
-        useCORS: true,
+        canvas = await html2canvas(document.body, {
+            backgroundColor: null,
 
-        logging: false
-    });
+            width: window.innerWidth,
+            height: window.innerHeight,
+
+            windowWidth: window.innerWidth,
+            windowHeight: window.innerHeight,
+
+            scrollX: window.scrollX,
+            scrollY: window.scrollY,
+
+            scale: 1,
+
+            useCORS: true,
+
+            allowTaint: false,
+
+            logging: false
+        });
+
+    } catch (error) {
+
+        console.error("Could not create LEGO page:", error);
+
+        if (menu) {
+            menu.style.visibility = "";
+        }
+
+        legoToggle.checked = false;
+        legoRunning = false;
+
+        return;
+    }
+
+
+    if (menu) {
+        menu.style.visibility = "";
+    }
 
 
     /*
-     * The page is now safely captured.
+     * Convert screenshot into an image.
      */
+    const image = canvas.toDataURL("image/png");
 
-    const pageImage = canvas.toDataURL("image/png");
 
-
+    /*
+     * Prepare animation stage.
+     */
     legoStage.innerHTML = "";
-    legoStage.className = "active";
+    legoStage.className = "lego-active";
 
 
     /*
      * Hide the REAL page.
      *
-     * The LEGO pieces now represent it.
+     * The LEGO copy is now on top.
      */
-    document.documentElement.style.visibility = "hidden";
+    document.body.classList.add("lego-page-hidden");
 
 
     /*
-     * LEGO dimensions.
+     * LEGO piece size.
+     *
+     * Smaller = more pieces / more accurate page.
      */
-    const pieceWidth = 48;
-    const pieceHeight = 24;
+    const PIECE_W = 50;
+    const PIECE_H = 25;
 
 
-    const cols =
-        Math.ceil(window.innerWidth / pieceWidth);
-
-    const rows =
-        Math.ceil(window.innerHeight / pieceHeight);
+    const screenW = window.innerWidth;
+    const screenH = window.innerHeight;
 
 
     const pieces = [];
 
 
     /*
-     * Create the page out of pieces.
+     * Build the page out of LEGO pieces.
      */
-    for (let row = 0; row < rows; row++) {
+    for (let y = 0; y < screenH; y += PIECE_H) {
 
-        for (let col = 0; col < cols; col++) {
+        for (let x = 0; x < screenW; x += PIECE_W) {
 
-            const x = col * pieceWidth;
-            const y = row * pieceHeight;
+            const w = Math.min(
+                PIECE_W,
+                screenW - x
+            );
 
-            const width =
-                Math.min(
-                    pieceWidth,
-                    window.innerWidth - x
-                );
-
-            const height =
-                Math.min(
-                    pieceHeight,
-                    window.innerHeight - y
-                );
+            const h = Math.min(
+                PIECE_H,
+                screenH - y
+            );
 
 
             const piece =
@@ -123,93 +143,84 @@ async function legoPage() {
 
 
             /*
-             * Exact position.
+             * Exact location.
              */
             piece.style.left = `${x}px`;
             piece.style.top = `${y}px`;
 
-            piece.style.width = `${width}px`;
-            piece.style.height = `${height}px`;
+            piece.style.width = `${w}px`;
+            piece.style.height = `${h}px`;
 
 
             /*
-             * The piece contains the exact
-             * corresponding section of the page.
+             * Give this LEGO piece the exact
+             * pixels from its section of the page.
              */
             piece.style.backgroundImage =
-                `url("${pageImage}")`;
+                `url(${image})`;
 
             piece.style.backgroundSize =
-                `${window.innerWidth}px ${window.innerHeight}px`;
+                `${screenW}px ${screenH}px`;
 
             piece.style.backgroundPosition =
                 `-${x}px -${y}px`;
 
 
             /*
-             * Slight random kick.
+             * Slight LEGO styling.
              */
             piece.style.setProperty(
-                "--kick-x",
-                `${(Math.random() - .5) * 50}px`
-            );
-
-            piece.style.setProperty(
-                "--kick-y",
-                `${(Math.random() - .5) * 50}px`
-            );
-
-            piece.style.setProperty(
-                "--kick-r",
-                `${(Math.random() - .5) * 20}deg`
+                "--lego-color",
+                getRandomLegoColor()
             );
 
 
             /*
-             * Where the piece flies during destruction.
+             * Explosion direction.
              */
             piece.style.setProperty(
                 "--explode-x",
-                `${(Math.random() - .5) * 1100}px`
+                `${(Math.random() - 0.5) * 900}px`
             );
 
             piece.style.setProperty(
                 "--explode-y",
-                `${100 + Math.random() * 800}px`
+                `${(Math.random() - 0.2) * 800}px`
             );
 
             piece.style.setProperty(
                 "--explode-r",
-                `${(Math.random() - .5) * 1000}deg`
+                `${(Math.random() - 0.5) * 900}deg`
             );
 
 
             /*
-             * Where the piece comes from
-             * during reconstruction.
+             * Starting point for reconstruction.
+             *
+             * Pieces come from ABOVE the screen.
              */
             piece.style.setProperty(
                 "--sky-x",
-                `${(Math.random() - .5) * 1000}px`
+                `${(Math.random() - 0.5) * 900}px`
             );
 
             piece.style.setProperty(
                 "--sky-y",
-                `${-window.innerHeight - Math.random() * 500}px`
+                `${-screenH - Math.random() * 500}px`
             );
 
             piece.style.setProperty(
                 "--sky-r",
-                `${(Math.random() - .5) * 900}deg`
+                `${(Math.random() - 0.5) * 900}deg`
             );
 
 
             /*
-             * Randomized falling timing.
+             * Random build delay.
              */
             piece.style.setProperty(
                 "--delay",
-                `${Math.random() * .9}s`
+                `${Math.random() * 1.1}s`
             );
 
 
@@ -221,74 +232,107 @@ async function legoPage() {
 
 
     /*
-     * ================================
-     * 1. PAGE DISINTEGRATES
-     * ================================
+     * Give browser one frame to place everything.
      */
-
     await new Promise(requestAnimationFrame);
 
+
+    /*
+     * ===============================
+     * PAGE BREAKS APART
+     * ===============================
+     */
+
     pieces.forEach(piece => {
-        piece.classList.add("break");
+        piece.classList.add("lego-break");
     });
 
 
     /*
-     * ================================
-     * 2. WHITE
-     * ================================
+     * ===============================
+     * WHITE FLASH
+     * ===============================
      */
 
-    await sleep(1050);
+    await sleep(1100);
 
-    legoStage.classList.add("white");
+    legoStage.classList.add("lego-white");
 
 
     /*
-     * ================================
-     * 3. LEGO FALLS FROM SKY
-     * ================================
+     * ===============================
+     * LEGO FALLS FROM SKY
+     * ===============================
      */
 
-    await sleep(550);
+    await sleep(500);
 
-    legoStage.classList.remove("white");
+    legoStage.classList.remove("lego-white");
 
 
     pieces.forEach(piece => {
 
-        piece.classList.remove("break");
+        /*
+         * Remove destruction animation.
+         */
+        piece.classList.remove("lego-break");
 
         /*
-         * Force animation restart.
+         * Force browser to reset animation.
          */
         void piece.offsetWidth;
 
-        piece.classList.add("build");
+        /*
+         * Start reconstruction.
+         */
+        piece.classList.add("lego-build");
 
     });
 
 
     /*
-     * ================================
-     * 4. LEGO FINISHES
-     * ================================
+     * ===============================
+     * WAIT FOR REBUILD
+     * ===============================
      */
 
-    await sleep(3000);
+    await sleep(3300);
 
 
     /*
-     * ================================
-     * 5. REVEAL REAL PAGE
-     * ================================
+     * ===============================
+     * REVEAL REAL PAGE
+     * ===============================
      */
 
-    document.documentElement.style.visibility = "";
+    document.body.classList.remove("lego-page-hidden");
 
     legoStage.className = "";
-
     legoStage.innerHTML = "";
+
+    legoToggle.checked = false;
+
+    legoRunning = false;
+}
+
+
+/*
+ * Random LEGO colors.
+ */
+function getRandomLegoColor() {
+
+    const colors = [
+        "#d71920",
+        "#0057b8",
+        "#ffd500",
+        "#00852b",
+        "#ff6f00",
+        "#ffffff"
+    ];
+
+    return colors[
+        Math.floor(Math.random() * colors.length)
+    ];
 }
 
 

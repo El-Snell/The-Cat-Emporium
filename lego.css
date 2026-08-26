@@ -1,90 +1,125 @@
+/* =========================================
+   LEGO EASTER EGG
+   ========================================= */
+
 #lego-stage {
     position: fixed;
-    inset: 0;
+
+    left: 0;
+    top: 0;
+
+    width: 100vw;
+    height: 100vh;
+
     z-index: 999999;
+
     pointer-events: none;
+
     overflow: hidden;
+
     display: none;
+
     background: white;
 }
 
-#lego-stage.active {
+
+#lego-stage.lego-active {
     display: block;
 }
 
-/* Every fragment of the page */
+
+/*
+ * Hide the actual page while the LEGO
+ * reconstruction is happening.
+ */
+body.lego-page-hidden > *:not(#lego-stage) {
+    visibility: hidden !important;
+}
+
+
+/*
+ * =========================================
+ * PAGE PIECES
+ * =========================================
+ */
+
 .lego-piece {
+
     position: absolute;
+
     box-sizing: border-box;
+
+    pointer-events: none;
 
     background-repeat: no-repeat;
 
     will-change: transform, opacity;
 
+    /*
+     * Slight separation between pieces.
+     */
+    border: 1px solid rgba(0, 0, 0, 0.12);
+
+    /*
+     * LEGO-ish edges.
+     */
     border-radius: 2px;
 
     box-shadow:
-        inset 0 1px rgba(255,255,255,.25),
+        inset 0 1px rgba(255,255,255,.22),
         inset 0 -2px rgba(0,0,0,.15),
-        0 2px 5px rgba(0,0,0,.12);
-}
-
-/* Tiny LEGO stud */
-.lego-piece::after {
-    content: "";
-
-    position: absolute;
-
-    width: 6px;
-    height: 6px;
-
-    top: -3px;
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    border-radius: 50%;
-
-    background: rgba(255,255,255,.18);
-
-    box-shadow:
-        inset 0 -1px rgba(0,0,0,.2);
+        0 2px 4px rgba(0,0,0,.15);
 }
 
 
-/* =========================
-   PAGE FALLS APART
-   ========================= */
+/*
+ * =========================================
+ * FALL APART
+ * =========================================
+ */
 
-.lego-piece.break {
+.lego-piece.lego-break {
+
     animation:
-        lego-explode 1.25s cubic-bezier(.5,0,.8,.2) forwards;
+        legoExplode
+        1.2s
+        cubic-bezier(.55,.05,.75,.2)
+        forwards;
 }
 
-@keyframes lego-explode {
+
+@keyframes legoExplode {
 
     0% {
+
         opacity: 1;
+
         transform:
             translate3d(0,0,0)
             rotate(0deg)
             scale(1);
     }
 
-    20% {
+
+    25% {
+
         opacity: 1;
+
         transform:
             translate3d(
-                var(--kick-x),
-                var(--kick-y),
+                calc(var(--explode-x) * .15),
+                calc(var(--explode-y) * .15),
                 0
             )
-            rotate(var(--kick-r))
-            scale(1.05);
+            rotate(calc(var(--explode-r) * .15))
+            scale(1.03);
     }
 
+
     100% {
+
         opacity: 0;
+
         transform:
             translate3d(
                 var(--explode-x),
@@ -97,23 +132,30 @@
 }
 
 
-/* =========================
-   LEGO FALLS FROM SKY
-   ========================= */
+/*
+ * =========================================
+ * FALL FROM SKY + REBUILD
+ * =========================================
+ */
 
-.lego-piece.build {
+.lego-piece.lego-build {
+
     opacity: 0;
 
     animation:
-        lego-build 1.9s cubic-bezier(.12,.8,.18,1)
+        legoBuild
+        1.9s
+        cubic-bezier(.12,.8,.2,1)
         forwards;
 
     animation-delay: var(--delay);
 }
 
-@keyframes lego-build {
+
+@keyframes legoBuild {
 
     0% {
+
         opacity: 0;
 
         transform:
@@ -126,22 +168,29 @@
             scale(.65);
     }
 
-    35% {
+
+    30% {
         opacity: 1;
     }
 
+
     75% {
+
+        opacity: 1;
+
         transform:
             translate3d(
                 0,
-                8px,
+                5px,
                 0
             )
             rotate(0deg)
             scale(1.02);
     }
 
+
     100% {
+
         opacity: 1;
 
         transform:
@@ -152,30 +201,39 @@
 }
 
 
-/* =========================
-   WHITE FLASH
-   ========================= */
+/*
+ * =========================================
+ * WHITE FLASH
+ * =========================================
+ */
 
-#lego-stage.white::before {
+#lego-stage.lego-white::after {
+
     content: "";
 
     position: absolute;
+
     inset: 0;
 
-    z-index: 1000000;
+    z-index: 10;
 
     background: white;
 
-    animation: white-flash .65s ease forwards;
+    animation:
+        legoFlash
+        .55s
+        ease
+        forwards;
 }
 
-@keyframes white-flash {
+
+@keyframes legoFlash {
 
     0% {
         opacity: 0;
     }
 
-    35% {
+    40% {
         opacity: 1;
     }
 
