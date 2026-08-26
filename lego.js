@@ -1,199 +1,226 @@
-const legoCheckbox = document.getElementById("lego");
-const legoTransition = document.getElementById("lego-transition");
-const legoWhite = document.getElementById("lego-white");
+const legoToggle = document.getElementById("lego");
+const legoStage = document.getElementById("lego-stage");
 
-let legoRunning = false;
+let legoAnimating = false;
 
-legoCheckbox.addEventListener("change", async () => {
+legoToggle.addEventListener("change", () => {
+  if (!legoToggle.checked || legoAnimating) return;
 
-  if (!legoCheckbox.checked || legoRunning) return;
+  legoAnimating = true;
+  runLegoAnimation();
+});
 
-  legoRunning = true;
 
-  /*
-   * Hide the actual page only after we have
-   * represented it with LEGO pieces.
-   */
-  const page = document.body;
+function runLegoAnimation() {
 
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-
-  legoTransition.innerHTML = "";
+  legoStage.innerHTML = "";
+  legoStage.classList.add("active");
 
   /*
-   * LEGO grid.
+   * Elements we want to turn into LEGO pieces.
    *
-   * Smaller pieces = more detailed reconstruction.
+   * Add/remove selectors here depending on your page.
    */
-  const pieceWidth = 55;
-  const pieceHeight = 28;
+  const targets = document.querySelectorAll(`
+    header,
+    nav,
+    main,
+    section,
+    article,
+    aside,
+    footer,
+    button,
+    a,
+    img,
+    h1,
+    h2,
+    h3,
+    p,
+    li
+  `);
 
-  const cols = Math.ceil(width / pieceWidth);
-  const rows = Math.ceil(height / pieceHeight);
+  const clones = [];
 
   /*
-   * Capture the current page.
-   *
-   * This requires html2canvas.
+   * Create a clone of every visible element.
    */
-  const canvas = await html2canvas(document.body, {
-    backgroundColor: null,
-    scale: 1
-  });
+  targets.forEach(element => {
 
-  const image = canvas.toDataURL();
+    const rect = element.getBoundingClientRect();
 
-  /*
-   * Hide the actual page.
-   */
-  page.style.visibility = "hidden";
-
-  legoTransition.style.opacity = "1";
-
-  /*
-   * Create LEGO pieces representing the page.
-   */
-  for (let row = 0; row < rows; row++) {
-
-    for (let col = 0; col < cols; col++) {
-
-      const tile = document.createElement("div");
-
-      tile.className = "lego-tile";
-
-      const x = col * pieceWidth;
-      const y = row * pieceHeight;
-
-      tile.style.width = `${pieceWidth}px`;
-      tile.style.height = `${pieceHeight}px`;
-
-      tile.style.left = `${x}px`;
-      tile.style.top = `${y}px`;
-
-      /*
-       * Each LEGO contains the corresponding
-       * section of the original page.
-       */
-      tile.style.backgroundImage = `url(${image})`;
-
-      tile.style.backgroundSize =
-        `${width}px ${height}px`;
-
-      tile.style.backgroundPosition =
-        `-${x}px -${y}px`;
-
-      /*
-       * Random destruction trajectory.
-       */
-      tile.style.setProperty(
-        "--x1",
-        `${(Math.random() - .5) * 120}px`
-      );
-
-      tile.style.setProperty(
-        "--y1",
-        `${-40 + Math.random() * 120}px`
-      );
-
-      tile.style.setProperty(
-        "--r1",
-        `${(Math.random() - .5) * 30}deg`
-      );
-
-      tile.style.setProperty(
-        "--x2",
-        `${(Math.random() - .5) * 900}px`
-      );
-
-      tile.style.setProperty(
-        "--y2",
-        `${100 + Math.random() * 700}px`
-      );
-
-      tile.style.setProperty(
-        "--r2",
-        `${(Math.random() - .5) * 720}deg`
-      );
-
-      legoTransition.appendChild(tile);
+    if (
+      rect.width === 0 ||
+      rect.height === 0 ||
+      getComputedStyle(element).display === "none"
+    ) {
+      return;
     }
-  }
 
-  /*
-   * LET THE PAGE FALL APART.
-   */
-  await new Promise(resolve => setTimeout(resolve, 1450));
+    /*
+     * Don't clone elements inside other cloned elements.
+     *
+     * Otherwise a button inside a section would
+     * get cloned twice.
+     */
+    if (
+      [...element.parentElement?.querySelectorAll(
+        "header, nav, main, section, article, aside, footer, button, a, img, h1, h2, h3, p, li"
+      ) || []].some(child =>
+        child !== element &&
+        element.contains(child)
+      )
+    ) {
+      return;
+    }
 
+    const clone = element.cloneNode(true);
 
-  /*
-   * WHITE FLASH
-   */
-  legoWhite.classList.add("flash");
+    clone.classList.add("lego-clone");
 
-  await new Promise(resolve => setTimeout(resolve, 500));
+    /*
+     * Put clone at exact original position.
+     */
+    clone.style.left = `${rect.left}px`;
+    clone.style.top = `${rect.top}px`;
+    clone.style.width = `${rect.width}px`;
+    clone.style.height = `${rect.height}px`;
 
-  legoWhite.classList.remove("flash");
+    /*
+     * Give it a fixed position so it doesn't move
+     * when the actual page changes.
+     */
+    clone.style.position = "fixed";
 
-
-  /*
-   * Reset the pieces so they're coming
-   * from above instead.
-   */
-  const pieces =
-    [...legoTransition.querySelectorAll(".lego-tile")];
-
-  pieces.forEach(piece => {
-
-    piece.style.setProperty(
-      "--fall-x",
-      `${(Math.random() - .5) * 1000}px`
+    /*
+     * Random destruction trajectory.
+     */
+    clone.style.setProperty(
+      "--burst-x",
+      `${(Math.random() - .5) * 100}px`
     );
 
-    piece.style.setProperty(
-      "--fall-y",
-      `${-window.innerHeight - Math.random() * 500}px`
+    clone.style.setProperty(
+      "--burst-y",
+      `${(Math.random() - .5) * 100}px`
     );
 
-    piece.style.setProperty(
-      "--fall-r",
+    clone.style.setProperty(
+      "--burst-r",
+      `${(Math.random() - .5) * 40}deg`
+    );
+
+    clone.style.setProperty(
+      "--explode-x",
+      `${(Math.random() - .5) * 900}px`
+    );
+
+    clone.style.setProperty(
+      "--explode-y",
+      `${100 + Math.random() * 700}px`
+    );
+
+    clone.style.setProperty(
+      "--explode-r",
       `${(Math.random() - .5) * 720}deg`
     );
 
     /*
-     * Stagger the falling pieces.
+     * Where the piece comes from during reconstruction.
      */
-    piece.style.setProperty(
-      "--delay",
+    clone.style.setProperty(
+      "--start-x",
+      `${(Math.random() - .5) * 1200}px`
+    );
+
+    clone.style.setProperty(
+      "--start-y",
+      `${-window.innerHeight - Math.random() * 500}px`
+    );
+
+    clone.style.setProperty(
+      "--start-r",
+      `${(Math.random() - .5) * 720}deg`
+    );
+
+    clone.style.setProperty(
+      "--build-delay",
       `${Math.random() * 1.2}s`
     );
+
+    legoStage.appendChild(clone);
+
+    clones.push(clone);
   });
 
 
   /*
-   * REBUILD THE PAGE.
+   * Hide the real page AFTER clones exist.
    */
-  legoTransition.classList.add("rebuild");
+  document.body.style.visibility = "hidden";
 
 
   /*
-   * Wait until everything has locked together.
+   * PHASE 1:
+   * Page breaks apart.
    */
-  await new Promise(resolve => setTimeout(resolve, 3200));
+  requestAnimationFrame(() => {
+
+    clones.forEach(clone => {
+      clone.classList.add("breaking");
+    });
+
+  });
 
 
   /*
-   * Reveal the actual page.
+   * PHASE 2:
+   * White screen.
    */
-  page.style.visibility = "";
+  setTimeout(() => {
 
-  legoTransition.style.opacity = "0";
+    legoStage.classList.add("flash");
 
-  legoTransition.classList.remove("rebuild");
+  }, 1150);
 
-  legoTransition.innerHTML = "";
 
-  legoRunning = false;
+  /*
+   * PHASE 3:
+   * LEGO pieces fall from sky and rebuild.
+   */
+  setTimeout(() => {
 
-  legoCheckbox.checked = false;
-});
+    clones.forEach(clone => {
+
+      clone.classList.remove("breaking");
+
+      /*
+       * Force animation restart.
+       */
+      void clone.offsetWidth;
+
+      clone.classList.add("building");
+
+    });
+
+  }, 1500);
+
+
+  /*
+   * PHASE 4:
+   * Reveal actual page.
+   */
+  setTimeout(() => {
+
+    document.body.style.visibility = "";
+
+    legoStage.classList.remove("flash");
+    legoStage.classList.remove("active");
+
+    legoStage.innerHTML = "";
+
+    legoToggle.checked = false;
+
+    legoAnimating = false;
+
+  }, 4200);
+}
