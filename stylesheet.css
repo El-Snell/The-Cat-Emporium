@@ -386,3 +386,98 @@ li {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+/* LEGO barrel-roll overlay */
+#lego-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  background: white;
+  opacity: 0;
+  overflow: hidden;
+}
+
+#lego-overlay.active {
+  opacity: 1;
+  animation: legoFlash 4s ease-in-out forwards;
+}
+
+.lego-piece {
+  position: absolute;
+  top: -120px;
+  width: 70px;
+  height: 35px;
+  background: #e30613;
+  border-radius: 3px;
+  box-shadow:
+    inset 0 -5px 0 rgba(0,0,0,.15),
+    0 5px 10px rgba(0,0,0,.15);
+  animation: legoFall 2.8s cubic-bezier(.2,.8,.25,1) forwards;
+}
+
+/* studs */
+.lego-piece::before {
+  content: "";
+  position: absolute;
+  inset: -9px 0 auto;
+  height: 18px;
+  background:
+    radial-gradient(circle at 9px 9px, #ff3945 0 7px, transparent 7.5px),
+    radial-gradient(circle at 26px 9px, #ff3945 0 7px, transparent 7.5px),
+    radial-gradient(circle at 43px 9px, #ff3945 0 7px, transparent 7.5px),
+    radial-gradient(circle at 60px 9px, #ff3945 0 7px, transparent 7.5px);
+}
+
+@keyframes legoFall {
+  0% {
+    transform:
+      translateY(-150px)
+      rotate(0deg)
+      scale(.7);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  70% {
+    transform:
+      translateY(calc(100vh - var(--bottom)))
+      rotate(var(--rotation))
+      scale(1);
+  }
+
+  82% {
+    transform:
+      translateY(calc(100vh - var(--bottom) - 18px))
+      rotate(calc(var(--rotation) * -0.15))
+      scale(1.03);
+  }
+
+  100% {
+    transform:
+      translateY(calc(100vh - var(--bottom)))
+      rotate(0deg)
+      scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes legoFlash {
+  0% {
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
