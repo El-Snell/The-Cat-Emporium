@@ -3,71 +3,81 @@ const legoStage = document.getElementById("lego-stage");
 
 let legoRunning = false;
 
+
+/* =========================================
+   TOGGLE
+   ========================================= */
+
 legoToggle.addEventListener("change", () => {
-    if (!legoToggle.checked || legoRunning) return;
+
+    if (!legoToggle.checked || legoRunning)
+        return;
 
     legoRunning = true;
+
     doLego();
+
 });
 
 
+/* =========================================
+   MAIN ANIMATION
+   ========================================= */
+
 async function doLego() {
 
-    /*
-     * Make sure the page is completely rendered.
-     */
     await new Promise(requestAnimationFrame);
 
 
     /*
-     * Take a picture of the CURRENT PAGE.
-     *
-     * We temporarily close the settings menu so it
-     * doesn't become part of the LEGO reconstruction.
+     * Temporarily hide settings menu from
+     * the page snapshot.
      */
-    const menu = document.getElementById("settingsMenu");
+    const menu =
+        document.getElementById("settingsMenu");
 
-    const wasOpen =
-        menu &&
-        getComputedStyle(menu).display !== "none";
-
-    if (menu) {
+    if (menu)
         menu.style.visibility = "hidden";
-    }
 
 
     let canvas;
 
+
     try {
 
-        canvas = await html2canvas(document.body, {
-            backgroundColor: null,
+        canvas = await html2canvas(
+            document.body,
+            {
+                backgroundColor: null,
 
-            width: window.innerWidth,
-            height: window.innerHeight,
+                width: window.innerWidth,
+                height: window.innerHeight,
 
-            windowWidth: window.innerWidth,
-            windowHeight: window.innerHeight,
+                windowWidth: window.innerWidth,
+                windowHeight: window.innerHeight,
 
-            scrollX: window.scrollX,
-            scrollY: window.scrollY,
+                scrollX: window.scrollX,
+                scrollY: window.scrollY,
 
-            scale: 1,
+                scale: 1,
 
-            useCORS: true,
+                useCORS: true,
 
-            allowTaint: false,
+                allowTaint: false,
 
-            logging: false
-        });
+                logging: false
+            }
+        );
 
     } catch (error) {
 
-        console.error("Could not create LEGO page:", error);
+        console.error(
+            "LEGO animation failed:",
+            error
+        );
 
-        if (menu) {
+        if (menu)
             menu.style.visibility = "";
-        }
 
         legoToggle.checked = false;
         legoRunning = false;
@@ -76,88 +86,102 @@ async function doLego() {
     }
 
 
-    if (menu) {
+    if (menu)
         menu.style.visibility = "";
-    }
+
+
+    const pageImage =
+        canvas.toDataURL("image/png");
 
 
     /*
-     * Convert screenshot into an image.
-     */
-    const image = canvas.toDataURL("image/png");
-
-
-    /*
-     * Prepare animation stage.
+     * Start clean.
      */
     legoStage.innerHTML = "";
-    legoStage.className = "lego-active";
+
+    legoStage.className =
+        "lego-active";
 
 
     /*
-     * Hide the REAL page.
-     *
-     * The LEGO copy is now on top.
+     * Hide the actual page.
      */
-    document.body.classList.add("lego-page-hidden");
+    document.body.classList.add(
+        "lego-page-hidden"
+    );
 
 
     /*
-     * LEGO piece size.
-     *
-     * Smaller = more pieces / more accurate page.
+     * LEGO dimensions.
      */
     const PIECE_W = 50;
     const PIECE_H = 25;
 
 
-    const screenW = window.innerWidth;
-    const screenH = window.innerHeight;
+    const screenW =
+        window.innerWidth;
+
+    const screenH =
+        window.innerHeight;
 
 
     const pieces = [];
 
 
     /*
-     * Build the page out of LEGO pieces.
+     * Create page pieces.
      */
-    for (let y = 0; y < screenH; y += PIECE_H) {
+    for (
+        let y = 0;
+        y < screenH;
+        y += PIECE_H
+    ) {
 
-        for (let x = 0; x < screenW; x += PIECE_W) {
+        for (
+            let x = 0;
+            x < screenW;
+            x += PIECE_W
+        ) {
 
-            const w = Math.min(
-                PIECE_W,
-                screenW - x
-            );
+            const w =
+                Math.min(
+                    PIECE_W,
+                    screenW - x
+                );
 
-            const h = Math.min(
-                PIECE_H,
-                screenH - y
-            );
+            const h =
+                Math.min(
+                    PIECE_H,
+                    screenH - y
+                );
 
 
             const piece =
                 document.createElement("div");
 
-            piece.className = "lego-piece";
+
+            piece.className =
+                "lego-piece";
+
+
+            piece.style.left =
+                `${x}px`;
+
+            piece.style.top =
+                `${y}px`;
+
+            piece.style.width =
+                `${w}px`;
+
+            piece.style.height =
+                `${h}px`;
 
 
             /*
-             * Exact location.
-             */
-            piece.style.left = `${x}px`;
-            piece.style.top = `${y}px`;
-
-            piece.style.width = `${w}px`;
-            piece.style.height = `${h}px`;
-
-
-            /*
-             * Give this LEGO piece the exact
-             * pixels from its section of the page.
+             * Exact section of the page.
              */
             piece.style.backgroundImage =
-                `url(${image})`;
+                `url("${pageImage}")`;
 
             piece.style.backgroundSize =
                 `${screenW}px ${screenH}px`;
@@ -167,41 +191,30 @@ async function doLego() {
 
 
             /*
-             * Slight LEGO styling.
-             */
-            piece.style.setProperty(
-                "--lego-color",
-                getRandomLegoColor()
-            );
-
-
-            /*
-             * Explosion direction.
+             * Explosion.
              */
             piece.style.setProperty(
                 "--explode-x",
-                `${(Math.random() - 0.5) * 900}px`
+                `${(Math.random() - .5) * 1000}px`
             );
 
             piece.style.setProperty(
                 "--explode-y",
-                `${(Math.random() - 0.2) * 800}px`
+                `${100 + Math.random() * 800}px`
             );
 
             piece.style.setProperty(
                 "--explode-r",
-                `${(Math.random() - 0.5) * 900}deg`
+                `${(Math.random() - .5) * 1000}deg`
             );
 
 
             /*
-             * Starting point for reconstruction.
-             *
-             * Pieces come from ABOVE the screen.
+             * Falling from sky.
              */
             piece.style.setProperty(
                 "--sky-x",
-                `${(Math.random() - 0.5) * 900}px`
+                `${(Math.random() - .5) * 1100}px`
             );
 
             piece.style.setProperty(
@@ -211,16 +224,31 @@ async function doLego() {
 
             piece.style.setProperty(
                 "--sky-r",
-                `${(Math.random() - 0.5) * 900}deg`
+                `${(Math.random() - .5) * 900}deg`
             );
 
 
             /*
-             * Random build delay.
+             * Stagger the reconstruction.
+             *
+             * Top pieces arrive first, then
+             * progressively lower pieces.
              */
+            const row =
+                Math.floor(y / PIECE_H);
+
+            const col =
+                Math.floor(x / PIECE_W);
+
+
+            const wave =
+                row * .018 +
+                Math.random() * .25;
+
+
             piece.style.setProperty(
                 "--delay",
-                `${Math.random() * 1.1}s`
+                `${wave}s`
             );
 
 
@@ -231,84 +259,101 @@ async function doLego() {
     }
 
 
-    /*
-     * Give browser one frame to place everything.
-     */
     await new Promise(requestAnimationFrame);
 
 
     /*
-     * ===============================
-     * PAGE BREAKS APART
-     * ===============================
+     * =====================================
+     * PAGE EXPLODES
+     * =====================================
      */
 
     pieces.forEach(piece => {
-        piece.classList.add("lego-break");
+
+        piece.classList.add(
+            "lego-break"
+        );
+
     });
 
 
     /*
-     * ===============================
-     * WHITE FLASH
-     * ===============================
+     * =====================================
+     * WHITE
+     * =====================================
      */
 
     await sleep(1100);
 
-    legoStage.classList.add("lego-white");
+    legoStage.classList.add(
+        "lego-white"
+    );
 
 
     /*
-     * ===============================
-     * LEGO FALLS FROM SKY
-     * ===============================
+     * =====================================
+     * FALLING LEGO
+     * =====================================
      */
 
-    await sleep(500);
+    await sleep(550);
 
-    legoStage.classList.remove("lego-white");
+    legoStage.classList.remove(
+        "lego-white"
+    );
 
 
     pieces.forEach(piece => {
 
-        /*
-         * Remove destruction animation.
-         */
-        piece.classList.remove("lego-break");
+        piece.classList.remove(
+            "lego-break"
+        );
 
         /*
-         * Force browser to reset animation.
+         * Force animation reset.
          */
         void piece.offsetWidth;
 
-        /*
-         * Start reconstruction.
-         */
-        piece.classList.add("lego-build");
+        piece.classList.add(
+            "lego-build"
+        );
 
     });
 
 
     /*
-     * ===============================
-     * WAIT FOR REBUILD
-     * ===============================
+     * =====================================
+     * CLICKING / LOCKING SOUNDS
+     * =====================================
      */
 
-    await sleep(3300);
+    playLegoSounds();
 
 
     /*
-     * ===============================
-     * REVEAL REAL PAGE
-     * ===============================
+     * =====================================
+     * WAIT FOR FINAL PIECES
+     * =====================================
      */
 
-    document.body.classList.remove("lego-page-hidden");
+    await sleep(3500);
+
+
+    /*
+     * =====================================
+     * REVEAL REAL PAGE
+     * =====================================
+     */
+
+    document.body.classList.remove(
+        "lego-page-hidden"
+    );
+
 
     legoStage.className = "";
+
     legoStage.innerHTML = "";
+
 
     legoToggle.checked = false;
 
@@ -316,26 +361,103 @@ async function doLego() {
 }
 
 
-/*
- * Random LEGO colors.
- */
-function getRandomLegoColor() {
+/* =========================================
+   LEGO SOUND
+   ========================================= */
 
-    const colors = [
-        "#d71920",
-        "#0057b8",
-        "#ffd500",
-        "#00852b",
-        "#ff6f00",
-        "#ffffff"
-    ];
+function playLegoSounds() {
 
-    return colors[
-        Math.floor(Math.random() * colors.length)
-    ];
+    /*
+     * Web Audio API.
+     *
+     * No external audio files required.
+     */
+    const AudioContext =
+        window.AudioContext ||
+        window.webkitAudioContext;
+
+    if (!AudioContext)
+        return;
+
+
+    const audio =
+        new AudioContext();
+
+
+    /*
+     * Several little plastic clicks.
+     */
+    const clicks = 18;
+
+
+    for (let i = 0; i < clicks; i++) {
+
+        setTimeout(() => {
+
+            const oscillator =
+                audio.createOscillator();
+
+            const gain =
+                audio.createGain();
+
+
+            oscillator.type =
+                "square";
+
+
+            oscillator.frequency.value =
+                170 +
+                Math.random() * 100;
+
+
+            gain.gain.setValueAtTime(
+                0.0001,
+                audio.currentTime
+            );
+
+
+            gain.gain.exponentialRampToValueAtTime(
+                0.045,
+                audio.currentTime + .005
+            );
+
+
+            gain.gain.exponentialRampToValueAtTime(
+                0.0001,
+                audio.currentTime + .055
+            );
+
+
+            oscillator.connect(gain);
+
+            gain.connect(audio.destination);
+
+
+            oscillator.start();
+
+            oscillator.stop(
+                audio.currentTime + .06
+            );
+
+        }, 1700 + i * 80);
+    }
+
+
+    /*
+     * Close audio context after the effect.
+     */
+    setTimeout(() => {
+        audio.close();
+    }, 4000);
 }
 
 
+/* =========================================
+   UTILITY
+   ========================================= */
+
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
 }

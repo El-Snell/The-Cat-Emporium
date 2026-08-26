@@ -1,50 +1,33 @@
-/* =========================================
-   LEGO EASTER EGG
-   ========================================= */
-
 #lego-stage {
     position: fixed;
-
-    left: 0;
-    top: 0;
-
+    inset: 0;
     width: 100vw;
     height: 100vh;
 
     z-index: 999999;
-
     pointer-events: none;
-
     overflow: hidden;
 
     display: none;
-
     background: white;
 }
-
 
 #lego-stage.lego-active {
     display: block;
 }
 
 
-/*
- * Hide the actual page while the LEGO
- * reconstruction is happening.
- */
+/* Hide the real page while the LEGO copy exists */
 body.lego-page-hidden > *:not(#lego-stage) {
     visibility: hidden !important;
 }
 
 
-/*
- * =========================================
- * PAGE PIECES
- * =========================================
- */
+/* =========================================
+   LEGO PIECES
+   ========================================= */
 
 .lego-piece {
-
     position: absolute;
 
     box-sizing: border-box;
@@ -55,35 +38,68 @@ body.lego-page-hidden > *:not(#lego-stage) {
 
     will-change: transform, opacity;
 
-    /*
-     * Slight separation between pieces.
-     */
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0,0,0,.16);
 
-    /*
-     * LEGO-ish edges.
-     */
     border-radius: 2px;
 
     box-shadow:
-        inset 0 1px rgba(255,255,255,.22),
-        inset 0 -2px rgba(0,0,0,.15),
+        inset 0 1px rgba(255,255,255,.25),
+        inset 0 -2px rgba(0,0,0,.18),
         0 2px 4px rgba(0,0,0,.15);
+
+    overflow: visible;
 }
 
 
 /*
- * =========================================
- * FALL APART
- * =========================================
+ * LEGO studs.
+ *
+ * We use multiple radial gradients instead of
+ * extra DOM elements, so every piece stays cheap.
  */
+.lego-piece::before {
+    content: "";
+
+    position: absolute;
+
+    left: 4px;
+    right: 4px;
+
+    top: -5px;
+
+    height: 10px;
+
+    background:
+        radial-gradient(
+            circle at 7px 5px,
+            rgba(255,255,255,.28) 0 3px,
+            rgba(0,0,0,.12) 3.5px 4px,
+            transparent 4.5px
+        ),
+        radial-gradient(
+            circle at 22px 5px,
+            rgba(255,255,255,.28) 0 3px,
+            rgba(0,0,0,.12) 3.5px 4px,
+            transparent 4.5px
+        ),
+        radial-gradient(
+            circle at 37px 5px,
+            rgba(255,255,255,.28) 0 3px,
+            rgba(0,0,0,.12) 3.5px 4px,
+            transparent 4.5px
+        );
+}
+
+
+/* =========================================
+   BREAK APART
+   ========================================= */
 
 .lego-piece.lego-break {
-
     animation:
         legoExplode
-        1.2s
-        cubic-bezier(.55,.05,.75,.2)
+        1.25s
+        cubic-bezier(.5,0,.8,.2)
         forwards;
 }
 
@@ -91,7 +107,6 @@ body.lego-page-hidden > *:not(#lego-stage) {
 @keyframes legoExplode {
 
     0% {
-
         opacity: 1;
 
         transform:
@@ -100,24 +115,18 @@ body.lego-page-hidden > *:not(#lego-stage) {
             scale(1);
     }
 
-
-    25% {
-
-        opacity: 1;
-
+    18% {
         transform:
             translate3d(
-                calc(var(--explode-x) * .15),
-                calc(var(--explode-y) * .15),
+                calc(var(--explode-x) * .08),
+                calc(var(--explode-y) * .08),
                 0
             )
-            rotate(calc(var(--explode-r) * .15))
-            scale(1.03);
+            rotate(calc(var(--explode-r) * .08))
+            scale(1.04);
     }
 
-
     100% {
-
         opacity: 0;
 
         transform:
@@ -132,11 +141,9 @@ body.lego-page-hidden > *:not(#lego-stage) {
 }
 
 
-/*
- * =========================================
- * FALL FROM SKY + REBUILD
- * =========================================
- */
+/* =========================================
+   FALL + SNAP
+   ========================================= */
 
 .lego-piece.lego-build {
 
@@ -144,8 +151,8 @@ body.lego-page-hidden > *:not(#lego-stage) {
 
     animation:
         legoBuild
-        1.9s
-        cubic-bezier(.12,.8,.2,1)
+        1.8s
+        cubic-bezier(.16,.85,.2,1)
         forwards;
 
     animation-delay: var(--delay);
@@ -155,7 +162,6 @@ body.lego-page-hidden > *:not(#lego-stage) {
 @keyframes legoBuild {
 
     0% {
-
         opacity: 0;
 
         transform:
@@ -168,29 +174,34 @@ body.lego-page-hidden > *:not(#lego-stage) {
             scale(.65);
     }
 
-
-    30% {
+    35% {
         opacity: 1;
     }
 
-
-    75% {
-
-        opacity: 1;
-
+    /*
+     * Piece hits the page.
+     */
+    78% {
         transform:
-            translate3d(
-                0,
-                5px,
-                0
-            )
+            translate3d(0,7px,0)
             rotate(0deg)
-            scale(1.02);
+            scale(1.04);
     }
 
+    /*
+     * Tiny compression.
+     */
+    88% {
+        transform:
+            translate3d(0,-2px,0)
+            rotate(0deg)
+            scale(.98);
+    }
 
+    /*
+     * LOCKED.
+     */
     100% {
-
         opacity: 1;
 
         transform:
@@ -201,11 +212,9 @@ body.lego-page-hidden > *:not(#lego-stage) {
 }
 
 
-/*
- * =========================================
- * WHITE FLASH
- * =========================================
- */
+/* =========================================
+   WHITE FLASH
+   ========================================= */
 
 #lego-stage.lego-white::after {
 
@@ -215,13 +224,13 @@ body.lego-page-hidden > *:not(#lego-stage) {
 
     inset: 0;
 
-    z-index: 10;
-
     background: white;
+
+    z-index: 100;
 
     animation:
         legoFlash
-        .55s
+        .6s
         ease
         forwards;
 }
@@ -233,11 +242,59 @@ body.lego-page-hidden > *:not(#lego-stage) {
         opacity: 0;
     }
 
-    40% {
+    35% {
         opacity: 1;
     }
 
     100% {
         opacity: 0;
+    }
+}
+
+
+/* =========================================
+   LITTLE IMPACT PARTICLES
+   ========================================= */
+
+.lego-spark {
+
+    position: absolute;
+
+    width: 4px;
+    height: 4px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    animation:
+        legoSpark
+        .45s
+        ease-out
+        forwards;
+}
+
+
+@keyframes legoSpark {
+
+    0% {
+        opacity: 1;
+
+        transform:
+            translate(0,0)
+            scale(1);
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+            translate(
+                var(--spark-x),
+                var(--spark-y)
+            )
+            scale(0);
     }
 }
