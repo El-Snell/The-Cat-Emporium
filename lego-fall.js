@@ -274,7 +274,7 @@ async function runLegoFall() {
                 `${x}px`;
 
 
-            piece.style.top =
+            piece.style.bottom =
                 `${y}px`;
 
 
