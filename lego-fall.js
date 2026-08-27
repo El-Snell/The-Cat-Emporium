@@ -404,7 +404,7 @@ async function runLegoFall() {
 
 
             piece.style.backgroundPosition =
-                `-${x}px ${y}px`;
+                `-${x}px -${y}px`;
 
 
             /*
