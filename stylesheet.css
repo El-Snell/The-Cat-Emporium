@@ -306,13 +306,16 @@ li {
   padding-right: 1%;
 }
 .searchimageindex {
-  justify-content: center;
+  position: fixed;
+  size: 30% !important;
+  right: 35%;
+  left: 35%;
 }
 .searchimage {
   position: sticky;
-  top: 0px;
+  top: 38.5px;
   right: 0px;
-  size: 5%;
+  size: 5% !important;
 }
 .dev {
   display: none;

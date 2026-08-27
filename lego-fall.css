@@ -1,0 +1,225 @@
+/* =========================================
+   ORGANIZED LEGO FALL
+   ========================================= */
+
+#lego-stage.lego-fall-active {
+    display: block;
+    position: fixed;
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+
+    pointer-events: none;
+
+    background: transparent;
+
+    z-index: 999999;
+}
+
+
+/* =========================================
+   LEGO PIECE
+   ========================================= */
+
+.lego-fall-piece {
+    position: absolute;
+
+    box-sizing: border-box;
+
+    pointer-events: none;
+
+    background-repeat: no-repeat;
+
+    border: 1px solid rgba(0, 0, 0, 0.18);
+
+    border-radius: 2px;
+
+    box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.3),
+        inset 0 -2px rgba(0, 0, 0, 0.18),
+        0 2px 4px rgba(0, 0, 0, 0.18);
+
+    /*
+     * Every piece falls vertically.
+     */
+    transform:
+        translateY(
+            var(--fall-distance)
+        );
+
+    opacity: 0;
+
+    animation:
+        legoRowFall
+        var(--fall-time)
+        cubic-bezier(.18, .85, .25, 1)
+        forwards;
+
+    animation-delay:
+        var(--fall-delay);
+}
+
+
+/* =========================================
+   STUDS
+   ========================================= */
+
+.lego-fall-piece::before {
+    content: "";
+
+    position: absolute;
+
+    left: 3px;
+    right: 3px;
+
+    top: -5px;
+
+    height: 10px;
+
+    background:
+        radial-gradient(
+            circle at 7px 5px,
+            rgba(255,255,255,.35) 0 3px,
+            rgba(0,0,0,.15) 3.5px 4px,
+            transparent 4.5px
+        ),
+        radial-gradient(
+            circle at 22px 5px,
+            rgba(255,255,255,.35) 0 3px,
+            rgba(0,0,0,.15) 3.5px 4px,
+            transparent 4.5px
+        ),
+        radial-gradient(
+            circle at 37px 5px,
+            rgba(255,255,255,.35) 0 3px,
+            rgba(0,0,0,.15) 3.5px 4px,
+            transparent 4.5px
+        );
+}
+
+
+/* =========================================
+   FALL
+   ========================================= */
+
+@keyframes legoRowFall {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            translateY(
+                var(--fall-distance)
+            );
+    }
+
+    12% {
+        opacity: 1;
+    }
+
+    82% {
+
+        transform:
+            translateY(7px);
+    }
+
+    91% {
+
+        /*
+         * Tiny compression when the row lands.
+         */
+        transform:
+            translateY(-2px);
+    }
+
+    100% {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================
+   PAGE HIDDEN DURING EFFECT
+   ========================================= */
+
+body.lego-fall-hidden > *:not(#lego-stage) {
+    visibility: hidden !important;
+}
+
+
+/* =========================================
+   LANDING FLASH
+   ========================================= */
+
+.lego-fall-impact {
+
+    animation:
+        legoImpact
+        .18s
+        ease-out;
+}
+
+
+@keyframes legoImpact {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    35% {
+        transform: translateY(2px);
+    }
+
+    70% {
+        transform: translateY(-1px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================
+   FINAL FLASH
+   ========================================= */
+
+#lego-stage.lego-fall-finished::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background: white;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    animation:
+        legoFinishFlash
+        .5s
+        ease-out;
+}
+
+
+@keyframes legoFinishFlash {
+
+    0% {
+        opacity: .8;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
