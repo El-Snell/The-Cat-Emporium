@@ -1,8 +1,8 @@
 const legoFallToggle =
     document.getElementById("legofall");
 
-const legoStage =
-    document.getElementById("lego-stage");
+//const legoStage =
+//    document.getElementById("lego-stage");
 
 let legoFallRunning = false;
 
