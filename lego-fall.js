@@ -56,6 +56,98 @@ async function runLegoFall() {
         menu.style.visibility =
             "hidden";
     }
+    const bannerObject = document.querySelector(
+        ".svgbanner object[type='image/svg+xml']"
+    );
+
+    let originalBannerHTML = null;
+    let inlineBanner = null;
+
+    if (bannerObject) {
+
+        try {
+
+            const svgURL = bannerObject.data;
+
+            const response = await fetch(svgURL);
+
+            if (!response.ok) {
+                throw new Error(
+                    `Could not load ${svgURL}`
+                );
+            }
+
+            const svgText = await response.text();
+
+
+            /*
+             * Save original object.
+             */
+            originalBannerHTML =
+                bannerObject.outerHTML;
+
+
+            /*
+             * Parse SVG.
+             */
+            const parser = new DOMParser();
+
+            const svgDocument =
+                parser.parseFromString(
+                    svgText,
+                    "image/svg+xml"
+                );
+
+
+            inlineBanner =
+                svgDocument.documentElement;
+
+
+            /*
+             * Make it behave like the
+             * original <object>.
+             */
+            inlineBanner.style.width = "100%";
+            inlineBanner.style.height = "100%";
+            inlineBanner.style.display = "block";
+
+
+            /*
+             * Preserve the SVG's viewBox.
+             */
+            if (!inlineBanner.hasAttribute("preserveAspectRatio")) {
+                inlineBanner.setAttribute(
+                    "preserveAspectRatio",
+                    "xMidYMid meet"
+                );
+            }
+
+
+            /*
+             * Replace object with inline SVG.
+             */
+            bannerObject.replaceWith(
+                inlineBanner
+            );
+
+
+            /*
+             * Allow browser to render it.
+             */
+            await new Promise(
+                requestAnimationFrame
+            );
+
+        } catch (error) {
+
+            console.warn(
+                "LEGO: Could not inline banner SVG:",
+                error
+            );
+
+            inlineBanner = null;
+        }
+    }
 
 
     /*
@@ -113,6 +205,10 @@ async function runLegoFall() {
             menu.style.visibility =
                 "";
         }
+        restoreBanner(
+            inlineBanner,
+            originalBannerHTML
+        );
 
         legoFallToggle.checked =
             false;
@@ -123,6 +219,10 @@ async function runLegoFall() {
         return;
     }
 
+    restoreBanner(
+        inlineBanner,
+        originalBannerHTML
+    );
 
     if (menu) {
         menu.style.visibility =
@@ -304,7 +404,7 @@ async function runLegoFall() {
 
 
             piece.style.backgroundPosition =
-                `-${x}px -${y}px`;
+                `-${x}px ${y}px`;
 
 
             /*
@@ -450,6 +550,20 @@ async function runLegoFall() {
         false;
 }
 
+function restoreBanner(
+    inlineBanner,
+    originalBannerHTML
+) {
+
+    if (
+        inlineBanner &&
+        originalBannerHTML
+    ) {
+
+        inlineBanner.outerHTML =
+            originalBannerHTML;
+    }
+}
 
 /* =========================================
    ORGANIZED LEGO SOUNDS
