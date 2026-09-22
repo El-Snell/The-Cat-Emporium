@@ -313,7 +313,7 @@ li {
   right: 35%;
   left: 35%;
 }
-.searchimage {
+.searchimage img{
   position: sticky;
   display:flex;
   top: 38.5px;
