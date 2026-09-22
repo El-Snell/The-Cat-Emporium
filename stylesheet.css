@@ -314,10 +314,10 @@ li {
   left: 35%;
 }
 .searchimage img{
-  position: sticky;
+  position: fixed;
   display:flex;
   top: 38.5px;
-  right: 0px;
+  right: 0;
   width: 5% !important;
   height: 5% !important;
 }
