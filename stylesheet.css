@@ -307,6 +307,7 @@ li {
 }
 .searchimageindex {
   position: fixed;
+  display:flex;
   width: 30% !important;
   height: 30% !important;
   right: 35%;
@@ -314,6 +315,7 @@ li {
 }
 .searchimage {
   position: sticky;
+  display:flex;
   top: 38.5px;
   right: 0px;
   width: 5% !important;
