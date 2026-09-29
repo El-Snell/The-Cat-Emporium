@@ -305,7 +305,7 @@ li {
   padding-bottom: 10px;
   padding-right: 1%;
 }
-.searchimageindex {
+.searchimageindex img {
   position: fixed;
   display:flex;
   width: 20% !important;
