@@ -308,11 +308,11 @@ li {
 .searchimageindex img {
   position: fixed;
   display:flex;
-  width: 20% !important;
+  /*width: 20% !important;*/
   height: 20% !important;
   right: 40% !important;
   left: 40% !important;
-  top: 60% !important;
+  top: 75% !important;
 }
 .searchimage img{
   position: fixed;
