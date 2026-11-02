@@ -128,6 +128,9 @@ input:checked + .slider:before {
 	display: inline;
 	font-size: 1.17em;
 }
+.pigsojierror {
+  font-weight: 350;
+}
 section {
 	width: 100%;
 }
