@@ -3,11 +3,9 @@ const menu = document.getElementById("settingsMenu");
 const darkToggle = document.getElementById("darkToggle");
 //const notifToggle = document.getElementById("notifToggle");
 const extToggle = document.getElementById("extToggle");
-const devMode = document.getElementById("devMode")
 const middle = document.querySelector(".middle")
 const normal = document.querySelector(".normal")
 const extended = document.querySelector(".extended")
-const dev = document.querySelector(".dev")
 
 // Reload page
 function reload_page() {
@@ -68,28 +66,6 @@ extToggle.addEventListener("change", function() {
   localStorage.setItem("extPara", isExt);
   reload_page()
 });
-
-// Load saved dev mode
-if (localStorage.getItem("devMode") === "true") {
-  devMode.checked = true;
-  dev.style.display = "inherit";
-} else if (localStorage.getItem("devMode") === "false") {
-  devMode.checked = false;
-  dev.style.display = "none";
-}
-
-// Toggle dev mode
-devMode.addEventListener("change", function() {
-  const isDev = devMode.checked;
-  dev.style.display = isDev ? "none" : "flex";
-  localStorage.setItem("devMode", isDev);
-  reload_page()
-});
-
-  // Toggle notifications (optional localStorage)
-  //notifToggle.addEventListener("change", function() {
-  //  localStorage.setItem("notifications", notifToggle.checked);
-  //});
 
 // Show/hide menu
 btn.addEventListener("click", function(e) {
