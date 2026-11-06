@@ -7,8 +7,8 @@ const middle = document.querySelector(".middle")
 const normal = document.querySelector(".normal")
 const extended = document.querySelector(".extended")
 const fontToggle = document.getElementById("fontToggle");
-const body = document.getElementsByTagName("body");
-console.log(body.outerHTML);
+const body = document.getElementsByName("body");
+
 // Reload page
 function reload_page() {
   location.reload();
