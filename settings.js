@@ -6,6 +6,8 @@ const extToggle = document.getElementById("extToggle");
 const middle = document.querySelector(".middle")
 const normal = document.querySelector(".normal")
 const extended = document.querySelector(".extended")
+const fontToggle = document.getElementById("fontToggle");
+const body = document.getElementsByTagName("body");
 
 // Reload page
 function reload_page() {
@@ -64,6 +66,26 @@ extToggle.addEventListener("change", function() {
   normal.style.display = isExt ? "inline" : "none";
   extended.style.display = isExt ? "none" : "inline";
   localStorage.setItem("extPara", isExt);
+  reload_page()
+});
+
+// Load saved custom font preference
+if (localStorage.getItem("custFont") === "true") {
+  fontToggle.checked = true;
+  body.classList.add("font");
+} else if (localStorage.getItem("custFont") === "false") {
+  fontToggle.checked = false;
+}
+
+// Toggle custom font
+fontToggle.addEventListener("change", function() {
+  const isFont = fontToggle.checked;
+  if (isFont === "true") {
+    body.classList.add("font"); 
+  } else if (isFont === "false") {
+    body.classList.remove("font");
+  }
+  localStorage.setItem("custFont", isFont);
   reload_page()
 });
 
