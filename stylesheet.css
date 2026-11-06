@@ -16,6 +16,13 @@ body {
 .font {
   font-family: "Unifont" !important;
 }
+.custfontinf {
+  font-size: 40px;
+  display: none;
+}
+.reginf {
+  display: inline;
+}
 .dropdown {
   position: fixed;
   right: 0;
