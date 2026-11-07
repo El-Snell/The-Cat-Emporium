@@ -8,6 +8,8 @@ const normal = document.querySelector(".normal")
 const extended = document.querySelector(".extended")
 const fontToggle = document.getElementById("fontToggle");
 const body = document.querySelector("body[name='body']");
+const reg = document.querySelectorAll(".reginf");
+const cust = document.querySelectorAll(".custfontinf");
 
 // Reload page
 function reload_page() {
@@ -68,9 +70,6 @@ extToggle.addEventListener("change", function() {
   localStorage.setItem("extPara", isExt);
   reload_page()
 });
-
-const reg = document.querySelector(".reginf");
-const cust = document.querySelector(".custfontinf");
 
 // Load saved custom font preference
 if (localStorage.getItem("custFont") === "true") {
