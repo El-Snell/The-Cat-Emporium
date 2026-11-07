@@ -10,6 +10,8 @@ const fontToggle = document.getElementById("fontToggle");
 const body = document.querySelector("body[name='body']");
 const reg = document.querySelectorAll(".reginf");
 const cust = document.querySelectorAll(".custfontinf");
+console.log(reg);
+console.log(cust);
 
 // Reload page
 function reload_page() {
