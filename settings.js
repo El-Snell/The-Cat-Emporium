@@ -10,8 +10,6 @@ const fontToggle = document.getElementById("fontToggle");
 const body = document.querySelector("body[name='body']");
 const reg = document.querySelectorAll(".reginf");
 const cust = document.querySelectorAll(".custfontinf");
-console.log(reg);
-console.log(cust);
 
 // Reload page
 function reload_page() {
@@ -77,12 +75,16 @@ extToggle.addEventListener("change", function() {
 if (localStorage.getItem("custFont") === "true") {
   fontToggle.checked = true;
   body.classList.add("font");
-  reg.style.display = "none";
-  cust.style.display = "inline";
+  for (let i = 0; i < reg.length; i++) {
+    reg[i].style.display = "none";
+    cust[i].style.display = "inline";
+  }
 } else if (localStorage.getItem("custFont") === "false") {
   fontToggle.checked = false;
-  reg.style.display = "inline";
-  cust.style.display = "none";
+  for (let i = 0; i < reg.length; i++) {
+    reg[i].style.display = "inline";
+    cust[i].style.display = "none";
+  }
 }
 
 // Toggle custom font
@@ -93,8 +95,10 @@ fontToggle.addEventListener("change", function() {
   } else if (isFont === "false") {
     body.classList.remove("font");
   }
-  reg.style.display = isFont ? "inline" : "none";
-  cust.style.display = isFont ? "none" : "inline";
+  for (let i = 0; i < reg.length; i++) {
+    reg[i].style.display = isFont ? "inline" : "none";
+    cust[i].style.display = isFont ? "none" : "inline";
+  }
   localStorage.setItem("custFont", isFont);
   reload_page()
 });
