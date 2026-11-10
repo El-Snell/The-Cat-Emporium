@@ -10,6 +10,7 @@ const fontToggle = document.getElementById("fontToggle");
 const body = document.querySelector("body[name='body']");
 const reg = document.querySelectorAll(".reginf");
 const cust = document.querySelectorAll(".custfontinf");
+const search = document.getElementById("search");
 
 // Reload page
 function reload_page() {
@@ -107,6 +108,11 @@ fontToggle.addEventListener("change", function() {
 btn.addEventListener("click", function(e) {
   e.stopPropagation();
   menu.classList.toggle("show");
+  //if (search) {
+  //  if (menu.classList.contains("show")) {
+  //    search.style.top = (38.5 + )
+  //  }
+  //}
 });
 // Close when clicking outside
 document.addEventListener("click", function() {
