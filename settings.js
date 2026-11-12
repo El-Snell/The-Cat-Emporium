@@ -111,6 +111,8 @@ btn.addEventListener("click", function(e) {
   if (search) {
     if (menu.classList.contains("show")) {
       let val = (38.5 + menu.style.height + 20);
+      console.log(val);
+      console.log(menu.style.height);
       search.style.top = `${val}px`;
     } else {
       search.style.top = "38.5px";
