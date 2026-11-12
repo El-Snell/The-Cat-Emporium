@@ -11,6 +11,7 @@ const body = document.querySelector("body[name='body']");
 const reg = document.querySelectorAll(".reginf");
 const cust = document.querySelectorAll(".custfontinf");
 const search = document.getElementById("search");
+const menucomp = window.getComputedStyle(menu);
 
 // Reload page
 function reload_page() {
@@ -110,9 +111,9 @@ btn.addEventListener("click", function(e) {
   menu.classList.toggle("show");
   if (search) {
     if (menu.classList.contains("show")) {
-      let val = (38.5 + menu.style.height + 20);
+      let val = (38.5 + menucomp.getPropertyValue("height") + 20);
       console.log(val);
-      console.log(menu.style.height);
+      console.log(menucomp.getPropertyValue("height"));
       search.style.top = `${val}px`;
     } else {
       search.style.top = "38.5px";
