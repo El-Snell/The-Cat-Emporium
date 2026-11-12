@@ -108,13 +108,19 @@ fontToggle.addEventListener("change", function() {
 btn.addEventListener("click", function(e) {
   e.stopPropagation();
   menu.classList.toggle("show");
-  //if (search) {
-  //  if (menu.classList.contains("show")) {
-  //    search.style.top = (38.5 + )
-  //  }
-  //}
+  if (search) {
+    if (menu.classList.contains("show")) {
+      let val = (38.5 + menu.style.height + 20);
+      search.style.top = `${val}px`;
+    } else {
+      search.style.top = "38.5px";
+    }
+  }
 });
 // Close when clicking outside
 document.addEventListener("click", function() {
   menu.classList.remove("show");
+  if (search) {
+    search.style.top = "38.5px";
+  }
 });
