@@ -111,10 +111,8 @@ btn.addEventListener("click", function(e) {
   menu.classList.toggle("show");
   if (search) {
     if (menu.classList.contains("show")) {
-      let val = (38.5 + (+(menucomp.getPropertyValue("height"))) + 20);
+      let val = (38.5 + (parseInt(menucomp.getPropertyValue("height"))) + 20);
       console.log(val);
-      console.log(menucomp.getPropertyValue("height"));
-      console.log(38.5 + 20);
       search.style.top = `${val}px`;
     } else {
       search.style.top = "38.5px";
