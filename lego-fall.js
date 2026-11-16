@@ -329,6 +329,7 @@ async function runLegoFall() {
             const y =
                 row *
                 PIECE_HEIGHT;
+            console.log(y);
 
 
             const width =
@@ -343,6 +344,7 @@ async function runLegoFall() {
                     PIECE_HEIGHT,
                     screenHeight - y
                 );
+            console.log(height);
 
 
             if (
