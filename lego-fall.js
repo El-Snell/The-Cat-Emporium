@@ -344,7 +344,6 @@ async function runLegoFall() {
                     PIECE_HEIGHT,
                     screenHeight - y
                 );
-            console.log(height);
 
 
             if (
@@ -405,7 +404,7 @@ async function runLegoFall() {
 
 
             piece.style.backgroundPosition =
-                `-${x}px -${y}px`;
+                `-${x}px ${y}px`;
 
 
             /*
