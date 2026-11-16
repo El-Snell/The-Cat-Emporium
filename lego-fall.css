@@ -50,7 +50,7 @@
             var(--fall-distance)
         );
 
-    opacity: 0;
+    opacity: 1;
 
     animation:
         legoRowFall
@@ -109,7 +109,7 @@
 
     0% {
 
-        opacity: 0;
+        opacity: 1;
 
         transform:
             translateY(
