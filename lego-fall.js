@@ -304,9 +304,9 @@ async function runLegoFall() {
      */
 
     for (
-        let row = rows;
-        row > 0;
-        row--
+        let row = 0;
+        row < rows;
+        row++
     ) {
 
         /*
@@ -329,7 +329,6 @@ async function runLegoFall() {
             const y =
                 row *
                 PIECE_HEIGHT;
-            console.log(y);
 
 
             const width =
@@ -374,7 +373,7 @@ async function runLegoFall() {
                 `${x}px`;
 
 
-            piece.style.bottom =
+            piece.style.top =
                 `${y}px`;
 
 
@@ -404,7 +403,7 @@ async function runLegoFall() {
 
 
             piece.style.backgroundPosition =
-                `-${x}px ${y}px`;
+                `-${x}px -${y}px`;
 
 
             /*
