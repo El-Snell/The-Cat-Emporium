@@ -267,7 +267,8 @@ async function runLegoFall() {
 
     const screenHeight =
         window.innerHeight;
-
+    console.log(screenWidth);
+    console.log(screenHeight);
 
     /*
      * These determine the LEGO grid.
@@ -330,6 +331,7 @@ async function runLegoFall() {
             const y =
                 row *
                 PIECE_HEIGHT;
+            console.log(y);
 
 
             const width =
@@ -344,6 +346,7 @@ async function runLegoFall() {
                     PIECE_HEIGHT,
                     screenHeight - y
                 );
+            console.log(height);
 
 
             if (
@@ -404,7 +407,7 @@ async function runLegoFall() {
 
 
             piece.style.backgroundPosition =
-                `-${x}px -${y}px`;
+                `-${x}px ${y}px`;
 
 
             /*
@@ -423,6 +426,7 @@ async function runLegoFall() {
                 "--fall-distance",
                 `${screenHeight + 200}px`
             );
+            console.log(screenHeight + 200);
 
 
             /*
