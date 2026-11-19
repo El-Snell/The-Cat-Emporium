@@ -23,6 +23,7 @@ legoFallToggle.addEventListener(
         }
 
         legoFallRunning = true;
+        alert("This may take a second. Please hold. (Dismiss this alert.)");
 
         runLegoFall();
     }

@@ -7,6 +7,7 @@ legoToggle.addEventListener("change", () => {
     if (!legoToggle.checked || legoRunning) return;
 
     legoRunning = true;
+    alert("This may take a second. Please hold. (Dismiss this alert.)");
     doLego();
 });
 
