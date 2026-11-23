@@ -572,7 +572,7 @@ function restoreBanner(
 function playOrganizedLegoSounds(
     rows
 ) {
-
+    const audio2 = new Audio = ("lego-building (mp3cut.net).mp3");
     const AudioContext =
         window.AudioContext ||
         window.webkitAudioContext;
@@ -621,59 +621,7 @@ function playOrganizedLegoSounds(
 
                     setTimeout(
                         () => {
-
-                            const oscillator =
-                                audio.createOscillator();
-
-
-                            const gain =
-                                audio.createGain();
-
-
-                            oscillator.type =
-                                "square";
-
-
-                            oscillator.frequency.value =
-                                160 +
-                                Math.random() * 100;
-
-
-                            gain.gain.setValueAtTime(
-                                0.0001,
-                                audio.currentTime
-                            );
-
-
-                            gain.gain.exponentialRampToValueAtTime(
-                                0.035,
-                                audio.currentTime + 0.005
-                            );
-
-
-                            gain.gain.exponentialRampToValueAtTime(
-                                0.0001,
-                                audio.currentTime + 0.055
-                            );
-
-
-                            oscillator.connect(
-                                gain
-                            );
-
-
-                            gain.connect(
-                                audio.destination
-                            );
-
-
-                            oscillator.start();
-
-
-                            oscillator.stop(
-                                audio.currentTime + 0.06
-                            );
-
+                            audio2.play();
                         },
                         i * 18
                     );
