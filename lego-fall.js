@@ -572,7 +572,7 @@ function restoreBanner(
 function playOrganizedLegoSounds(
     rows
 ) {
-    const audio2 = new Audio("lego-building.mp3");
+    const audio2 = new Audio("lego-building (mp3cut.net).mp3");
     const AudioContext =
         window.AudioContext ||
         window.webkitAudioContext;
